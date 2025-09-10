@@ -9,7 +9,7 @@ export const loadRoutes = (app: Express) => {
     const routesPath = path.join(apiPath, moduleName, 'routes', `${moduleName}.ts`)
 
     if (fs.existsSync(routesPath)) {
-      // import dinámico
+
       const routes = require(routesPath).default
       app.use('/api', routes)
       console.log(`✅ Rutas cargadas para módulo: ${moduleName}`)

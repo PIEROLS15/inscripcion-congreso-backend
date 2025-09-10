@@ -1,0 +1,99 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+  id                Int      @id @default(autoincrement())
+  dni               String   @unique @db.Char(8)
+  nombres           String
+  apellidos         String
+  correoElectronico String   @unique
+  celular           String   @db.Char(9)
+  creadoEn          DateTime @default(now())
+  actualizadoEn     DateTime @updatedAt
+
+  inscripciones Inscripcion[]
+}
+
+model TipoInscripcion {
+  id          Int     @id @default(autoincrement())
+  nombre      String
+  precio      Int
+  descripcion String?
+  activo      Boolean @default(true)
+
+  inscripciones Inscripcion[]
+}
+
+model Clasificacion {
+  id     Int    @id @default(autoincrement())
+  nombre String
+
+  inscripciones Inscripcion[]
+}
+
+model MetodoDeposito {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+
+  inscripciones Inscripcion[]
+}
+
+model TipoPago {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+
+  inscripciones Inscripcion[]
+}
+
+model EstadoInscripcion {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+
+  inscripciones Inscripcion[]
+}
+
+model Inscripcion {
+  id BigInt @id @default(autoincrement())
+
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onUpdate: Cascade)
+
+  tipoInscripcionId Int?
+  tipoInscripcion   TipoInscripcion? @relation(fields: [tipoInscripcionId], references: [id])
+
+  clasificacionId Int?
+  clasificacion   Clasificacion? @relation(fields: [clasificacionId], references: [id])
+
+  metodoDepositoId Int
+  metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id])
+
+  tipoPagoId Int
+  tipoPago   TipoPago @relation(fields: [tipoPagoId], references: [id])
+
+  estadoId Int
+  estado   EstadoInscripcion @relation(fields: [estadoId], references: [id])
+
+  vouchers Voucher[]
+
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+}
+
+model Voucher {
+  id        Int      @id @default(autoincrement())
+  codigo    String   @unique
+  fechaPago DateTime
+  filename  String?
+  path      String?
+  mime      String?
+  creadoEn  DateTime @default(now())
+
+  inscripcionId BigInt
+  inscripcion   Inscripcion @relation(fields: [inscripcionId], references: [id])
+}
