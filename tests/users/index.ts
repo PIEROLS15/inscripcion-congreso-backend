@@ -1,6 +1,6 @@
 import { prisma } from '../../src/database/prisma'
 import { createUser, getUsers, getUserById } from '../../src/api/users/services/users'
-import { mockUser } from '../helpers/mockData'
+import { mockUser } from '../helpers/mock'
 
 jest.mock('../../src/database/prisma', () => ({
     prisma: {
