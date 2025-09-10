@@ -34,3 +34,7 @@ jobs:
       # 5. Verificar build de TypeScript
       - name: build
         run: npm run build
+
+      # 6. Ejecutar tests con Jest
+      - name: Run tests
+        run: npm run test
