@@ -32,4 +32,13 @@ module.exports = [
             '@typescript-eslint/no-unused-vars': ['warn'],
         },
     },
+    {
+        files: ['tests/**/*.ts'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+                ...globals.jest,
+            },
+        },
+    },
 ]

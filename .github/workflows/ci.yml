@@ -36,5 +36,5 @@ jobs:
         run: npm run build
 
       # 6. Ejecutar tests con Jest
-      - name: Run tests
+      - name: tests
         run: npm run test
