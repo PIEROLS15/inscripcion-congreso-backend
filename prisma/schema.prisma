@@ -79,7 +79,7 @@ model Inscripcion {
   estadoId Int
   estado   EstadoInscripcion @relation(fields: [estadoId], references: [id])
 
-  vouchers Voucher[] // 👈 relación 1 a N (permite varios comprobantes)
+  vouchers Voucher[]
 
   creadoEn      DateTime @default(now())
   actualizadoEn DateTime @updatedAt
@@ -87,11 +87,11 @@ model Inscripcion {
 
 model Voucher {
   id        Int      @id @default(autoincrement())
-  codigo    String   @unique // Código de operación
-  fechaPago DateTime // Fecha del pago en el banco/billetera
-  filename  String? // Nombre del archivo subido
-  path      String? // URL o ruta donde se guarda
-  mime      String? // Tipo MIME (jpg, pdf, etc.)
+  codigo    String   @unique
+  fechaPago DateTime
+  filename  String?
+  path      String?
+  mime      String?
   creadoEn  DateTime @default(now())
 
   inscripcionId BigInt
