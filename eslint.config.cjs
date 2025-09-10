@@ -25,7 +25,7 @@ module.exports = [
             // estilo
             'quotes': ['error', 'single'],
             'semi': ['error', 'never'],
-            'indent': ['error', 2, { SwitchCase: 1 }],
+            // 'indent': ['error', 2, { SwitchCase: 1 }],
 
             // typescript
             '@typescript-eslint/no-explicit-any': 'error',

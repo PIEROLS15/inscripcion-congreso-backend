@@ -29,3 +29,5 @@ coverage/
 
 # Archivos temporales
 *.tsbuildinfo
+
+/generated/prisma
