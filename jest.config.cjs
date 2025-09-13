@@ -6,4 +6,5 @@ module.exports = {
   testMatch: ['**/tests/**/*.ts'],
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   testPathIgnorePatterns: ['/helpers/'],
+  verbose: true,
 }
