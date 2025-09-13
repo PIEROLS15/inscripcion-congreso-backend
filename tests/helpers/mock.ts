@@ -9,3 +9,11 @@ export const mockUser = {
     actualizadoEn: new Date(),
     inscripciones: [],
 }
+
+export const mockRegistrationType = {
+    id: 1,
+    nombre: 'Estudiante pregado',
+    descripcion: 'Solo certificado',
+    precio: 35,
+    activo: true,
+}
