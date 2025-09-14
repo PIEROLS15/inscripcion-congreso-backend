@@ -17,3 +17,8 @@ export const mockRegistrationType = {
     precio: 35,
     activo: true,
 }
+
+export const mockClassification = {
+    id: 1,
+    nombre: 'DOCENTE',
+}
