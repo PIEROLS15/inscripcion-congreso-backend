@@ -18,15 +18,6 @@ export async function createDepositMethod(data: DepositMethod) {
     return prisma.metodoDeposito.create({
         data: {
             nombre: data.nombre,
-            // ...(data.opciones && {
-            //     opciones: {
-            //         create: data.opciones.map((opcion) => ({
-            //             subcategoria: opcion.subcategoria,
-            //             nombre: opcion.nombre,
-            //         })),
-            //     },
-            // }
-            // )
         }
     })
 }
