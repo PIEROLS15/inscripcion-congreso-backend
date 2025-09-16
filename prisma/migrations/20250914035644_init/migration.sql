@@ -45,9 +45,10 @@ CREATE TABLE `MetodoDeposito` (
 -- CreateTable
 CREATE TABLE `TipoPago` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `metodoDepositoId` INTEGER NOT NULL,
+    `subcategoria` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `TipoPago_nombre_key`(`nombre`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -89,6 +90,9 @@ CREATE TABLE `Voucher` (
     UNIQUE INDEX `Voucher_codigo_key`(`codigo`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `TipoPago` ADD CONSTRAINT `TipoPago_metodoDepositoId_fkey` FOREIGN KEY (`metodoDepositoId`) REFERENCES `MetodoDeposito`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Inscripcion` ADD CONSTRAINT `Inscripcion_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
