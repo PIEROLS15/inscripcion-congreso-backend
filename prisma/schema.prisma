@@ -38,15 +38,19 @@ model Clasificacion {
 }
 
 model MetodoDeposito {
-  id     Int    @id @default(autoincrement())
-  nombre String @unique
-
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
+  opciones      TipoPago[]
   inscripciones Inscripcion[]
 }
 
 model TipoPago {
-  id     Int    @id @default(autoincrement())
-  nombre String @unique
+  id               Int            @id @default(autoincrement())
+  metodoDepositoId Int
+  metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id], onDelete: Cascade)
+
+  subcategoria String
+  nombre       String
 
   inscripciones Inscripcion[]
 }
@@ -87,11 +91,11 @@ model Inscripcion {
 
 model Voucher {
   id        Int      @id @default(autoincrement())
-  codigo    String   @unique
-  fechaPago DateTime
-  filename  String?
-  path      String?
-  mime      String?
+  codigo    String   @unique // Código de operación
+  fechaPago DateTime // Fecha del pago en el banco/billetera
+  filename  String? // Nombre del archivo subido
+  path      String? // URL o ruta donde se guarda
+  mime      String? // Tipo MIME (jpg, pdf, etc.)
   creadoEn  DateTime @default(now())
 
   inscripcionId BigInt

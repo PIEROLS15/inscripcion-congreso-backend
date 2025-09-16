@@ -22,3 +22,9 @@ export const mockClassification = {
     id: 1,
     nombre: 'DOCENTE',
 }
+
+export const mockDepositMethod = {
+    id: 1,
+    nombre: 'Banco de la Nación',
+    opciones: [],
+}
