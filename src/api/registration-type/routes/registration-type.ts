@@ -20,6 +20,18 @@ const routes: AppRoute[] = [
         handler: registrationTypesController.find,
         middlewares: [],
     },
+    {
+        method: 'put',
+        path: '/v1/registration-types/:id',
+        handler: registrationTypesController.update,
+        middlewares: [],
+    },
+    {
+        method: 'delete',
+        path: '/v1/registration-types/:id',
+        handler: registrationTypesController.remove,
+        middlewares: [],
+    },
 ]
 
 export default buildRouter(routes)
