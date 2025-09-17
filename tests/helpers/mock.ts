@@ -28,3 +28,9 @@ export const mockDepositMethod = {
     nombre: 'Banco de la Nación',
     opciones: [],
 }
+
+export const mockPaymentType = {
+    id: 1,
+    metodoDepositoId: 1,
+    nombre: 'Pago Directo',
+}

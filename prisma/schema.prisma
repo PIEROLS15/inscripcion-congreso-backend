@@ -49,8 +49,7 @@ model TipoPago {
   metodoDepositoId Int
   metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id], onDelete: Cascade)
 
-  subcategoria String
-  nombre       String
+  nombre String
 
   inscripciones Inscripcion[]
 }
