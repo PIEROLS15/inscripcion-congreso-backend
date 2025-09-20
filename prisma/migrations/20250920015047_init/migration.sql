@@ -62,13 +62,14 @@ CREATE TABLE `EstadoInscripcion` (
 
 -- CreateTable
 CREATE TABLE `Inscripcion` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `usuarioId` INTEGER NOT NULL,
     `tipoInscripcionId` INTEGER NULL,
     `clasificacionId` INTEGER NULL,
     `metodoDepositoId` INTEGER NOT NULL,
     `tipoPagoId` INTEGER NOT NULL,
     `estadoId` INTEGER NOT NULL,
+    `voucherId` INTEGER NOT NULL,
     `creadoEn` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoEn` DATETIME(3) NOT NULL,
 
@@ -83,8 +84,6 @@ CREATE TABLE `Voucher` (
     `filename` VARCHAR(191) NULL,
     `path` VARCHAR(191) NULL,
     `mime` VARCHAR(191) NULL,
-    `creadoEn` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `inscripcionId` BIGINT NOT NULL,
 
     UNIQUE INDEX `Voucher_codigo_key`(`codigo`),
     PRIMARY KEY (`id`)
@@ -112,4 +111,4 @@ ALTER TABLE `Inscripcion` ADD CONSTRAINT `Inscripcion_tipoPagoId_fkey` FOREIGN K
 ALTER TABLE `Inscripcion` ADD CONSTRAINT `Inscripcion_estadoId_fkey` FOREIGN KEY (`estadoId`) REFERENCES `EstadoInscripcion`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Voucher` ADD CONSTRAINT `Voucher_inscripcionId_fkey` FOREIGN KEY (`inscripcionId`) REFERENCES `Inscripcion`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Inscripcion` ADD CONSTRAINT `Inscripcion_voucherId_fkey` FOREIGN KEY (`voucherId`) REFERENCES `Voucher`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
