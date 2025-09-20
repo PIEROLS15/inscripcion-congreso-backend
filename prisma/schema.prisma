@@ -62,7 +62,7 @@ model EstadoInscripcion {
 }
 
 model Inscripcion {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   usuarioId Int
   usuario   Usuario @relation(fields: [usuarioId], references: [id], onUpdate: Cascade)
@@ -82,7 +82,8 @@ model Inscripcion {
   estadoId Int
   estado   EstadoInscripcion @relation(fields: [estadoId], references: [id])
 
-  vouchers Voucher[]
+  voucherId Int
+  voucher   Voucher @relation(fields: [voucherId], references: [id])
 
   creadoEn      DateTime @default(now())
   actualizadoEn DateTime @updatedAt
@@ -90,13 +91,11 @@ model Inscripcion {
 
 model Voucher {
   id        Int      @id @default(autoincrement())
-  codigo    String   @unique // Código de operación
-  fechaPago DateTime // Fecha del pago en el banco/billetera
-  filename  String? // Nombre del archivo subido
-  path      String? // URL o ruta donde se guarda
-  mime      String? // Tipo MIME (jpg, pdf, etc.)
-  creadoEn  DateTime @default(now())
+  codigo    String   @unique
+  fechaPago DateTime
+  filename  String?
+  path      String?
+  mime      String?
 
-  inscripcionId BigInt
-  inscripcion   Inscripcion @relation(fields: [inscripcionId], references: [id])
+  inscripciones Inscripcion[]
 }
