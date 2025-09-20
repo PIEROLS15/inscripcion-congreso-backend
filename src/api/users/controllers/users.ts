@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getUsers, createUser, getUserById } from '../services/users'
+import { getUsers, createUser, getUserById, getUserByEmail, updateUser, deleteUser } from '../services/users'
 import { usuarioSchema } from '../utils/validation'
 
 export async function list(req: Request, res: Response) {
@@ -47,6 +47,58 @@ export async function find(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).json({
             error: 'Error al obtener el usuario',
+            details: (error as Error).message,
+        })
+    }
+}
+
+export async function findByEmail(req: Request, res: Response) {
+    try {
+        const email = req.params.email
+        if (!email) {
+            return res.status(400).json({ error: 'El email es requerido' })
+        }
+        const user = await getUserByEmail(email)
+        if (!user) {
+            return res.status(404).json({ error: `Usuario con email ${email} no encontrado` })
+        }
+        return res.json(user)
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Error al obtener el usuario por email',
+            details: (error as Error).message,
+        })
+    }
+}
+
+export async function update(req: Request, res: Response) {
+    try {
+        const id = parseInt(req.params.id, 10)
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'El id debe ser un número válido' })
+        }
+        const data = req.body
+        const updatedUser = await updateUser(id, data)
+        return res.json(updatedUser)
+    } catch (error) {
+        return res.status(400).json({
+            error: 'Error al actualizar el usuario',
+            details: (error as Error).message,
+        })
+    }
+}
+
+export async function remove(req: Request, res: Response) {
+    try {
+        const id = parseInt(req.params.id, 10)
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'El id debe ser un número válido' })
+        }
+        await deleteUser(id)
+        return res.status(200).json({ message: 'Usuario eliminado correctamente' })
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Error al eliminar el usuario',
             details: (error as Error).message,
         })
     }

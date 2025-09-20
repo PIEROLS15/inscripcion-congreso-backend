@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getRegistrationTypes, getRegistrationTypeById, createRegistrationType } from '../services/registration-type'
+import { getRegistrationTypes, getRegistrationTypeById, createRegistrationType, updateRegistrationType, deleteRegistrationType } from '../services/registration-type'
 
 export async function list(req: Request, res: Response) {
     try {
@@ -44,3 +44,37 @@ export async function find(req: Request, res: Response) {
         })
     }
 }
+
+export async function update(req: Request, res: Response) {
+    try {
+        const id = parseInt(req.params.id, 10)
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'El id debe ser un número válido' })
+        }
+        const data = req.body
+        const updatedRegistrationType = await updateRegistrationType(id, data)
+        return res.json(updatedRegistrationType)
+    } catch (error) {
+        return res.status(400).json({
+            error: 'Error en la actualización del tipo de inscripción',
+            details: (error as Error).message,
+        })
+    }
+}
+
+export async function remove(req: Request, res: Response) {
+    try {
+        const id = parseInt(req.params.id, 10)
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'El id debe ser un número válido' })
+        }
+        await deleteRegistrationType(id)
+        return res.status(200).json({ message: 'Tipo de inscripción eliminado correctamente' })
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Error al eliminar el tipo de inscripción',
+            details: (error as Error).message,
+        })
+    }
+}
+

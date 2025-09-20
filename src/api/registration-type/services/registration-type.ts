@@ -14,3 +14,16 @@ export async function getRegistrationTypeById(id: number) {
 export async function createRegistrationType(data: RegistrationType) {
     return prisma.tipoInscripcion.create({ data })
 }
+
+export async function updateRegistrationType(id: number, data: Partial<RegistrationType>) {
+    return prisma.tipoInscripcion.update({
+        where: { id },
+        data,
+    })
+}
+
+export async function deleteRegistrationType(id: number) {
+    return prisma.tipoInscripcion.delete({
+        where: { id },
+    })
+}

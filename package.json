@@ -8,7 +8,8 @@
     "start": "node dist/server.js",
     "test": "jest --forceExit",
     "lint": "eslint src tests",
-    "lint:fix": "eslint src tests --fix"
+    "lint:fix": "eslint src tests --fix",
+    "seed": "ts-node ./src/database/seed.ts"
   },
   "keywords": [],
   "author": "",

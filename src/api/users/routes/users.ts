@@ -16,8 +16,26 @@ const routes: AppRoute[] = [
     },
     {
         method: 'get',
-        path: '/v1/user/:id',
+        path: '/v1/users/:id',
         handler: usersController.find,
+        middlewares: [],
+    },
+    {
+        method: 'get',
+        path: '/v1/users/email/:email',
+        handler: usersController.findByEmail,
+        middlewares: [],
+    },
+    {
+        method: 'put',
+        path: '/v1/users/:id',
+        handler: usersController.update,
+        middlewares: [],
+    },
+    {
+        method: 'delete',
+        path: '/v1/users/:id',
+        handler: usersController.remove,
         middlewares: [],
     },
 ]
