@@ -34,3 +34,13 @@ export const mockPaymentType = {
     metodoDepositoId: 1,
     nombre: 'Pago Directo',
 }
+
+export const mockVoucher = {
+    id: 1,
+    codigo: '1233211a',
+    fechaPago: new Date('2025-09-19T10:30:00.000Z'),
+    filename: 'file-1758333947816-177390556.png',
+    path: '/uploads/file-1758333947816-177390556.png',
+    mime: 'image/png'
+
+}

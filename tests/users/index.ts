@@ -16,7 +16,7 @@ jest.mock('../../src/database/prisma', () => ({
 
 describe('User Services (mocked)', () => {
     it('should create a user correctly', async () => {
-        ; (prisma.usuario.create as jest.Mock).mockResolvedValue(mockUser)
+        (prisma.usuario.create as jest.Mock).mockResolvedValue(mockUser)
 
         const usuario = await createUser({
             dni: mockUser.dni,
@@ -39,7 +39,7 @@ describe('User Services (mocked)', () => {
     })
 
     it('should return all users', async () => {
-        ; (prisma.usuario.findMany as jest.Mock).mockResolvedValue([mockUser])
+        (prisma.usuario.findMany as jest.Mock).mockResolvedValue([mockUser])
 
         const usuarios = await getUsers()
 
@@ -50,7 +50,7 @@ describe('User Services (mocked)', () => {
     })
 
     it('should return a user by id', async () => {
-        ; (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(mockUser)
+        (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(mockUser)
 
         const usuario = await getUserById(1)
 
@@ -62,7 +62,7 @@ describe('User Services (mocked)', () => {
     })
 
     it('should return a user by email', async () => {
-        ; (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(mockUser)
+        (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(mockUser)
 
         const usuario = await getUserByEmail(mockUser.correoElectronico)
 
@@ -87,7 +87,7 @@ describe('User Services (mocked)', () => {
     })
 
     it('should delete a user correctly', async () => {
-        ; (prisma.usuario.delete as jest.Mock).mockResolvedValue(mockUser)
+        (prisma.usuario.delete as jest.Mock).mockResolvedValue(mockUser)
 
         const usuario = await deleteUser(mockUser.id)
 
