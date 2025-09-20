@@ -44,3 +44,18 @@ export const mockVoucher = {
     mime: 'image/png'
 
 }
+
+export const mockInscriptionState = {
+    id: 1,
+    nombre: 'Pendiente'
+}
+
+export const mockInscription = {
+    usuario: mockUser,
+    tipoInscripcionId: 2,
+    clasificacionId: 3,
+    metodoDepositoId: 1,
+    tipoPagoId: 1,
+    estadoId: 1,
+    voucherId: 2
+}
