@@ -1,0 +1,823 @@
+{
+    "info": {
+        "_postman_id": "inscripcion-congreso-backend",
+        "name": "Inscripción Congreso Backend API",
+        "description": "API para el sistema de inscripción del VII CIISIC",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "users"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"dni\": \"12345678\",\n  \"nombres\": \"Juan\",\n  \"apellidos\": \"Pérez\",\n  \"correoElectronico\": \"juan@example.com\",\n  \"celular\": \"987654321\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "users"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/users/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "users", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User by Email",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/users/email/:email",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "users", "email", ":email"],
+                            "variable": [
+                                {
+                                    "key": "email",
+                                    "value": "juan@example.com"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombres\": \"Juan Carlos\",\n  \"apellidos\": \"Pérez García\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/users/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "users", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/users/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "users", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Registration Types",
+            "item": [
+                {
+                    "name": "Get All Registration Types",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/registration-types",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "registration-types"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Registration Type",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Estudiante pregrado\",\n  \"descripcion\": \"Solo certificado\",\n  \"precio\": 35,\n  \"activo\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/registration-types",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "registration-types"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Registration Type by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/registration-types/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "registration-types", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Registration Type",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Inscripción Regular\",\n  \"precio\": 40\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/registration-types/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "registration-types", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Registration Type",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/registration-types/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "registration-types", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Classifications",
+            "item": [
+                {
+                    "name": "Get All Classifications",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/classification",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "classification"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Classification",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"DOCENTE\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/classification",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "classification"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Classification by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/classification/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "classification", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Classification",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"DOCENTE ACTUALIZADO\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/classification/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "classification", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Classification",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/classification/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "classification", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Deposit Methods",
+            "item": [
+                {
+                    "name": "Get All Deposit Methods",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/deposit-method",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "deposit-method"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Deposit Method",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Banco de la Nación\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/deposit-method",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "deposit-method"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Deposit Method by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/deposit-method/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "deposit-method", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Deposit Method",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Banco de Crédito\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/deposit-method/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "deposit-method", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Deposit Method",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/deposit-method/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "deposit-method", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Payment Types",
+            "item": [
+                {
+                    "name": "Get All Payment Types",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/payment-type",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "payment-type"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Payment Type",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"metodoDepositoId\": 1,\n  \"nombre\": \"Pago Directo\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/payment-type",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "payment-type"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Payment Type by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/payment-type/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "payment-type", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Payment Type",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"metodoDepositoId\": 2,\n  \"nombre\": \"Pago en línea\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/payment-type/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "payment-type", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Payment Type",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/payment-type/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "payment-type", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Inscription States",
+            "item": [
+                {
+                    "name": "Get All Inscription States",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription-state",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription-state"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Inscription State",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Pendiente\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription-state",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription-state"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Inscription State by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription-state/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription-state", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Inscription State",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"Aprobado\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription-state/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription-state", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Inscription State",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription-state/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription-state", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Vouchers",
+            "item": [
+                {
+                    "name": "Get All Vouchers",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/voucher",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "voucher"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Voucher (with file upload)",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "codigo",
+                                    "value": "1233211a",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "fechaPago",
+                                    "value": "2025-09-19T10:30:00.000Z",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "src": "/path/to/your/file.png"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/voucher",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "voucher"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Voucher by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/voucher/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "voucher", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Voucher",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/voucher/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "voucher", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Inscriptions",
+            "item": [
+                {
+                    "name": "Get All Inscriptions",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Inscription",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"usuario\": {\n    \"dni\": \"12345678\",\n    \"nombres\": \"Juan\",\n    \"apellidos\": \"Pérez\",\n    \"correoElectronico\": \"juan@example.com\",\n    \"celular\": \"987654321\"\n  },\n  \"tipoInscripcionId\": 2,\n  \"clasificacionId\": 3,\n  \"metodoDepositoId\": 1,\n  \"tipoPagoId\": 1,\n  \"estadoId\": 1,\n  \"voucherId\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Inscription by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Inscription",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "RENIEC",
+            "item": [
+                {
+                    "name": "Get DNI Data from RENIEC",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/reniec/dni?number=12345678",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "reniec", "dni"],
+                            "query": [
+                                {
+                                    "key": "number",
+                                    "value": "12345678"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000",
+            "type": "string"
+        }
+    ]
+}

@@ -8,16 +8,26 @@ generator client {
 }
 
 model Usuario {
-  id                Int      @id @default(autoincrement())
-  dni               String   @unique @db.Char(8)
+  id                Int            @id @default(autoincrement())
+  idTipoDocumentoId String?
+  tipoDocumento     TipoDocumento? @relation(fields: [idTipoDocumentoId], references: [id])
+  numero            String         @unique
+  dni               String         @unique @db.Char(8)
   nombres           String
   apellidos         String
-  correoElectronico String   @unique
-  celular           String   @db.Char(9)
-  creadoEn          DateTime @default(now())
-  actualizadoEn     DateTime @updatedAt
+  correoElectronico String         @unique
+  celular           String         @db.Char(9)
+  creadoEn          DateTime       @default(now())
+  actualizadoEn     DateTime       @updatedAt
 
   inscripciones Inscripcion[]
+}
+
+model TipoDocumento {
+  id          String    @id 
+  nombre      String
+  abreviatura String    @unique
+  usuarios    Usuario[]
 }
 
 model TipoInscripcion {

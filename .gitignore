@@ -31,3 +31,6 @@ coverage/
 *.tsbuildinfo
 
 /generated/prisma
+
+# Pero permitir el archivo .gitkeep
+!/uploads/.gitkeep
