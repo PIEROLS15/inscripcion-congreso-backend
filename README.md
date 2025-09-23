@@ -5,7 +5,7 @@
 ![TypeScript](https://img.shields.io/badge/typescript-5.x-blue)  
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-Backend modular construido con **Express + TypeScript**, inspirado en la arquitectura de Strapi pero totalmente personalizable.  
+Backend modular construido con **Express + TypeScript**. 
 Incluye validaciones con **Yup**, linting con **ESLint/Prettier**, y CI con **GitHub Actions**.
 
 ---
@@ -25,7 +25,7 @@ Incluye validaciones con **Yup**, linting con **ESLint/Prettier**, y CI con **Gi
 
 ```bash
 config/                      # Configuración (ej: variables de entorno)
-database/                    # Configuración y utilidades de base de datos
+prisma/                      # ORM para la base de datos
 ├── index.ts                 # Punto de entrada para inicializar la conexión
 ├── config.ts                # Lee variables de entorno y define la config
 ├── migrations/              # Scripts de migraciones
@@ -34,13 +34,15 @@ src/
 ├── api/                     # Módulos de negocio (cada API independiente)
 │   └── hello/               # Ejemplo de API
 │       ├── controllers/     # Controladores
-│       ├── routes/          # Definición de rutas estilo Strapi
+│       ├── routes/          # Definición de rutas estilo
 │       └── services/        # Lógica de negocio
+├── database/                # Configuración y utilidades de base de datos
 ├── middlewares/             # Middlewares globales (errorHandler, validate, etc.)
 ├── types/                   # Tipos y utilidades compartidas
 ├── app.ts                   # Configuración de la app Express
 └── server.ts                # Punto de entrada del servidor
 tests/                       # Pruebas unitarias
+uploads/                     # Almacenamiento de vouchers
 ```
 
 ## 🛠️ Instalación
@@ -64,6 +66,22 @@ node -v
 2. **Instala las dependencias:**
    ```bash
    npm install
+   
+3. **Levantar servicios de mysql:**
+   ```bash
+   Debes crear la base de datos en mysql, por ejemplo con el nombre: congreso_inscripcion_db
+   
+4. **Archivo .env:**
+   ```bash
+   DATABASE_URL="mysql://root:@localhost:3306/congreso_inscripcion_db"
+   
+5. **Ejecutar la creación de tablas:**
+   ```bash
+   npx prisma migrate dev
+
+6. **Ejecutar los datos semillas:**
+   ```bash
+   npm run seed
 
 ## 🚀 Desarrollo
 
