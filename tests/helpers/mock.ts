@@ -59,3 +59,12 @@ export const mockInscription = {
     estadoId: 1,
     voucherId: 2
 }
+
+export const mockContact = {
+    firstName: 'Piero',
+    lastName: 'Llanos',
+    email: 'piero@prueba.com',
+    subject: 'prueba',
+    message: 'mensaje de prueba',
+    timestamp: new Date(),
+}
