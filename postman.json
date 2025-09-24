@@ -1,13 +1,14 @@
 {
     "info": {
         "_postman_id": "inscripcion-congreso-backend",
-        "name": "Inscripción Congreso Backend API",
-        "description": "API para el sistema de inscripción del VII CIISIC",
+        "name": "Inscripción Congreso Backend API - VII CIISIC",
+        "description": "API completa para el sistema de inscripción del VII Congreso Internacional de Ingeniería de Sistemas e Informática y Computación",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
         {
             "name": "Users",
+            "description": "Gestión de usuarios del sistema",
             "item": [
                 {
                     "name": "Get All Users",
@@ -33,7 +34,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"dni\": \"12345678\",\n  \"nombres\": \"Juan\",\n  \"apellidos\": \"Pérez\",\n  \"correoElectronico\": \"juan@example.com\",\n  \"celular\": \"987654321\"\n}"
+                            "raw": "{\n  \"dni\": \"12345678\",\n  \"nombres\": \"Juan\",\n  \"apellidos\": \"Pérez García\",\n  \"correoElectronico\": \"juan.perez@example.com\",\n  \"celular\": \"987654321\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/users",
@@ -54,7 +55,8 @@
                             "variable": [
                                 {
                                     "key": "id",
-                                    "value": "1"
+                                    "value": "1",
+                                    "description": "ID del usuario"
                                 }
                             ]
                         }
@@ -72,7 +74,8 @@
                             "variable": [
                                 {
                                     "key": "email",
-                                    "value": "juan@example.com"
+                                    "value": "juan.perez@example.com",
+                                    "description": "Email del usuario"
                                 }
                             ]
                         }
@@ -90,7 +93,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nombres\": \"Juan Carlos\",\n  \"apellidos\": \"Pérez García\"\n}"
+                            "raw": "{\n  \"nombres\": \"Juan Carlos\",\n  \"apellidos\": \"Pérez García\",\n  \"celular\": \"999888777\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/users/:id",
@@ -127,6 +130,7 @@
         },
         {
             "name": "Registration Types",
+            "description": "Tipos de inscripción disponibles",
             "item": [
                 {
                     "name": "Get All Registration Types",
@@ -152,7 +156,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"Estudiante pregrado\",\n  \"descripcion\": \"Solo certificado\",\n  \"precio\": 35,\n  \"activo\": true\n}"
+                            "raw": "{\n  \"nombre\": \"Estudiante pregrado\",\n  \"descripcion\": \"Solo certificado de participación\",\n  \"precio\": 35,\n  \"activo\": true\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/registration-types",
@@ -191,7 +195,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"Inscripción Regular\",\n  \"precio\": 40\n}"
+                            "raw": "{\n  \"nombre\": \"Estudiante pregrado actualizado\",\n  \"precio\": 40,\n  \"activo\": false\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/registration-types/:id",
@@ -228,6 +232,7 @@
         },
         {
             "name": "Classifications",
+            "description": "Clasificaciones de participantes",
             "item": [
                 {
                     "name": "Get All Classifications",
@@ -292,7 +297,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"DOCENTE ACTUALIZADO\"\n}"
+                            "raw": "{\n  \"nombre\": \"PROFESOR UNIVERSITARIO\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/classification/:id",
@@ -329,6 +334,7 @@
         },
         {
             "name": "Deposit Methods",
+            "description": "Métodos de depósito disponibles",
             "item": [
                 {
                     "name": "Get All Deposit Methods",
@@ -393,7 +399,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nombre\": \"Banco de Crédito\"\n}"
+                            "raw": "{\n  \"nombre\": \"Banco de Crédito del Perú\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/deposit-method/:id",
@@ -430,6 +436,7 @@
         },
         {
             "name": "Payment Types",
+            "description": "Tipos de pago disponibles",
             "item": [
                 {
                     "name": "Get All Payment Types",
@@ -455,7 +462,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"metodoDepositoId\": 1,\n  \"nombre\": \"Pago Directo\"\n}"
+                            "raw": "{\n  \"metodoDepositoId\": 1,\n  \"nombre\": \"Depósito directo\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/payment-type",
@@ -494,7 +501,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"metodoDepositoId\": 2,\n  \"nombre\": \"Pago en línea\"\n}"
+                            "raw": "{\n  \"metodoDepositoId\": 2,\n  \"nombre\": \"Transferencia bancaria\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/payment-type/:id",
@@ -531,6 +538,7 @@
         },
         {
             "name": "Inscription States",
+            "description": "Estados de inscripción",
             "item": [
                 {
                     "name": "Get All Inscription States",
@@ -632,6 +640,7 @@
         },
         {
             "name": "Vouchers",
+            "description": "Gestión de comprobantes de pago",
             "item": [
                 {
                     "name": "Get All Vouchers",
@@ -655,18 +664,21 @@
                             "formdata": [
                                 {
                                     "key": "codigo",
-                                    "value": "1233211a",
-                                    "type": "text"
+                                    "value": "VOU2024001",
+                                    "type": "text",
+                                    "description": "Código único del voucher"
                                 },
                                 {
                                     "key": "fechaPago",
-                                    "value": "2025-09-19T10:30:00.000Z",
-                                    "type": "text"
+                                    "value": "2024-09-24T10:30:00.000Z",
+                                    "type": "text",
+                                    "description": "Fecha del pago en formato ISO"
                                 },
                                 {
                                     "key": "file",
                                     "type": "file",
-                                    "src": "/path/to/your/file.png"
+                                    "description": "Imagen del comprobante (PNG, JPG, PDF)",
+                                    "src": []
                                 }
                             ]
                         },
@@ -717,6 +729,7 @@
         },
         {
             "name": "Inscriptions",
+            "description": "Gestión de inscripciones al congreso",
             "item": [
                 {
                     "name": "Get All Inscriptions",
@@ -731,7 +744,7 @@
                     }
                 },
                 {
-                    "name": "Create Inscription",
+                    "name": "Create Complete Inscription",
                     "request": {
                         "method": "POST",
                         "header": [
@@ -742,7 +755,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"usuario\": {\n    \"dni\": \"12345678\",\n    \"nombres\": \"Juan\",\n    \"apellidos\": \"Pérez\",\n    \"correoElectronico\": \"juan@example.com\",\n    \"celular\": \"987654321\"\n  },\n  \"tipoInscripcionId\": 2,\n  \"clasificacionId\": 3,\n  \"metodoDepositoId\": 1,\n  \"tipoPagoId\": 1,\n  \"estadoId\": 1,\n  \"voucherId\": 2\n}"
+                            "raw": "{\n  \"usuario\": {\n    \"dni\": \"12345678\",\n    \"nombres\": \"Juan Carlos\",\n    \"apellidos\": \"Pérez García\",\n    \"correoElectronico\": \"juan.carlos@example.com\",\n    \"celular\": \"987654321\"\n  },\n  \"tipoInscripcionId\": 1,\n  \"clasificacionId\": 2,\n  \"metodoDepositoId\": 1,\n  \"tipoPagoId\": 1,\n  \"estadoId\": 1,\n  \"voucherId\": 1\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/inscription",
@@ -790,7 +803,8 @@
             ]
         },
         {
-            "name": "RENIEC",
+            "name": "RENIEC Services",
+            "description": "Servicios de consulta a RENIEC y otros proveedores",
             "item": [
                 {
                     "name": "Get DNI Data from RENIEC",
@@ -804,20 +818,110 @@
                             "query": [
                                 {
                                     "key": "number",
-                                    "value": "12345678"
+                                    "value": "12345678",
+                                    "description": "Número de DNI a consultar"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get CE Data",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/reniec/ce?number=123456789",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "reniec", "ce"],
+                            "query": [
+                                {
+                                    "key": "number",
+                                    "value": "123456789",
+                                    "description": "Número de Carnet de Extranjería"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get RUC Data from SUNAT",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/reniec/ruc?number=20123456789",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "reniec", "ruc"],
+                            "query": [
+                                {
+                                    "key": "number",
+                                    "value": "20123456789",
+                                    "description": "Número de RUC a consultar"
                                 }
                             ]
                         }
                     }
                 }
             ]
+        },
+        {
+            "name": "Health Check",
+            "description": "Verificación del estado del servidor",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        }
+                    }
+                },
+                {
+                    "name": "API Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/status",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "status"]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
         }
     ],
     "variable": [
         {
             "key": "base_url",
             "value": "http://localhost:3000",
-            "type": "string"
+            "type": "string",
+            "description": "URL base del servidor"
         }
     ]
 }
