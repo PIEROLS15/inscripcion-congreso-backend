@@ -48,9 +48,12 @@ RUN npm ci --only=production && npm cache clean --force
 # Copiar archivos compilados
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 
-# # Healthcheck - usa puerto 3010 para ser compatible con Dokploy
-# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-#   CMD node --eval "require('http').get('http://localhost:3010/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => { process.exit(1) })"
+# Exponer puerto para Dokploy
+EXPOSE 3000
+
+# Healthcheck - usa puerto 3010 para ser compatible con Dokploy
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node --eval "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => { process.exit(1) })"
 
 # Comando de inicio
 CMD ["dumb-init", "node", "dist/src/server.js"] 
