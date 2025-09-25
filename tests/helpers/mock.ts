@@ -1,6 +1,7 @@
 export const mockUser = {
     id: 1,
     dni: '12345678',
+    numero: '12345678',
     nombres: 'Juan',
     apellidos: 'Pérez',
     correoElectronico: 'juan@example.com',
@@ -41,8 +42,8 @@ export const mockVoucher = {
     fechaPago: new Date('2025-09-19T10:30:00.000Z'),
     filename: 'file-1758333947816-177390556.png',
     path: '/uploads/file-1758333947816-177390556.png',
-    mime: 'image/png'
-
+    mime: 'image/png',
+    inscripciones: []
 }
 
 export const mockInscriptionState = {
@@ -57,7 +58,8 @@ export const mockInscription = {
     metodoDepositoId: 1,
     tipoPagoId: 1,
     estadoId: 1,
-    voucherId: 2
+    voucherId: 2,
+    voucher: mockVoucher
 }
 
 export const mockContact = {

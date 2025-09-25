@@ -1,11 +1,11 @@
 import { prisma } from '../prisma'
 
-export async function seedPaymentType() {
+export async function seedDocumentType() {
     //Limpiar tabla
     await prisma.tipoDocumento.deleteMany()
 
     //Reiniciar los índices de autoincremento
-    await prisma.$executeRawUnsafe('ALTER TABLE tipoDocumento AUTO_INCREMENT = 1')
+    await prisma.$executeRawUnsafe('ALTER TABLE TipoDocumento AUTO_INCREMENT = 1')
 
     //Insertar valores por defecto
     await prisma.tipoDocumento.createMany({

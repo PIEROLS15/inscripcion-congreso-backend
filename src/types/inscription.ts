@@ -2,12 +2,16 @@ import { Users } from './users'
 
 export interface CreateInscription {
     usuario: Users
+    voucher: {
+        codigo: string
+        fechaPago: Date
+        archivo?: string // Ruta del archivo subido
+    }
     tipoInscripcionId?: number
     clasificacionId?: number
     metodoDepositoId: number
     tipoPagoId: number
-    estadoId: number
-    voucherId: number
+    estadoId?: number
 }
 
 export interface Inscription {

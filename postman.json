@@ -2,7 +2,8 @@
     "info": {
         "_postman_id": "inscripcion-congreso-backend",
         "name": "Inscripción Congreso Backend API - VII CIISIC",
-        "description": "API completa para el sistema de inscripción del VII Congreso Internacional de Ingeniería de Sistemas e Informática y Computación",
+        "description": "API completa para el sistema de inscripción del VII Congreso Internacional de Ingeniería de Sistemas e Informática y Computación. Servidor ejecutándose en puerto 3010.",
+        "version": "1.0.0",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
@@ -321,6 +322,108 @@
                             "raw": "{{base_url}}/api/v1/classification/:id",
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "classification", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Document Types",
+            "description": "Tipos de documento de identidad",
+            "item": [
+                {
+                    "name": "Get All Document Types",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/document-type",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "document-type"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Document Type",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"DNI\",\n  \"descripcion\": \"Documento Nacional de Identidad\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/document-type",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "document-type"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Document Type by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/document-type/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "document-type", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Document Type",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nombre\": \"CE\",\n  \"descripcion\": \"Carnet de Extranjería\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/document-type/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "document-type", ":id"],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Document Type",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/document-type/:id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "document-type", ":id"],
                             "variable": [
                                 {
                                     "key": "id",
@@ -729,7 +832,7 @@
         },
         {
             "name": "Inscriptions",
-            "description": "Gestión de inscripciones al congreso",
+            "description": "Gestión de inscripciones al congreso. Endpoint transaccional que crea usuario, voucher e inscripción en una sola operación.",
             "item": [
                 {
                     "name": "Get All Inscriptions",
@@ -744,7 +847,72 @@
                     }
                 },
                 {
-                    "name": "Create Complete Inscription",
+                    "name": "Create Complete Inscription (Transactional)",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "usuario",
+                                    "value": "{\"dni\": \"76251607\", \"nombres\": \"Gianmarcos\", \"apellidos\": \"Daniel\", \"correoElectronico\": \"handsome_aries_09@hotmail.com\", \"celular\": \"954030965\"}",
+                                    "type": "text",
+                                    "description": "Datos del usuario en formato JSON"
+                                },
+                                {
+                                    "key": "codigo",
+                                    "value": "15701",
+                                    "type": "text",
+                                    "description": "Código único del voucher"
+                                },
+                                {
+                                    "key": "fechaPago",
+                                    "value": "2025-09-10",
+                                    "type": "text",
+                                    "description": "Fecha del pago en formato YYYY-MM-DD"
+                                },
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "description": "Imagen del comprobante (PNG, JPG, PDF)",
+                                    "src": []
+                                },
+                                {
+                                    "key": "tipoInscripcionId",
+                                    "value": "3",
+                                    "type": "text",
+                                    "description": "ID del tipo de inscripción (1=Docente, 2=Estudiante posgrado, 3=Estudiante pregrado)"
+                                },
+                                {
+                                    "key": "clasificacionId",
+                                    "value": "",
+                                    "type": "text",
+                                    "description": "ID de la clasificación (opcional, vacío si no aplica)"
+                                },
+                                {
+                                    "key": "metodoDepositoId",
+                                    "value": "1",
+                                    "type": "text",
+                                    "description": "ID del método de depósito (1=Banco, 2=Billetera digital)"
+                                },
+                                {
+                                    "key": "tipoPagoId",
+                                    "value": "1",
+                                    "type": "text",
+                                    "description": "ID del tipo de pago (1=Pago Interbancario, etc.)"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/inscription",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "inscription"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Complete Inscription (JSON)",
                     "request": {
                         "method": "POST",
                         "header": [
@@ -755,7 +923,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"usuario\": {\n    \"dni\": \"12345678\",\n    \"nombres\": \"Juan Carlos\",\n    \"apellidos\": \"Pérez García\",\n    \"correoElectronico\": \"juan.carlos@example.com\",\n    \"celular\": \"987654321\"\n  },\n  \"tipoInscripcionId\": 1,\n  \"clasificacionId\": 2,\n  \"metodoDepositoId\": 1,\n  \"tipoPagoId\": 1,\n  \"estadoId\": 1,\n  \"voucherId\": 1\n}"
+                            "raw": "{\n  \"usuario\": {\n    \"dni\": \"76251607\",\n    \"nombres\": \"Gianmarcos\",\n    \"apellidos\": \"Daniel\",\n    \"correoElectronico\": \"handsome_aries_09@hotmail.com\",\n    \"celular\": \"954030965\"\n  },\n  \"voucher\": {\n    \"codigo\": \"15701\",\n    \"fechaPago\": \"2025-09-10T00:00:00.000Z\"\n  },\n  \"tipoInscripcionId\": 3,\n  \"clasificacionId\": null,\n  \"metodoDepositoId\": 1,\n  \"tipoPagoId\": 1\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/inscription",
@@ -919,7 +1087,7 @@
     "variable": [
         {
             "key": "base_url",
-            "value": "http://localhost:3000",
+            "value": "http://localhost:3010",
             "type": "string",
             "description": "URL base del servidor"
         }

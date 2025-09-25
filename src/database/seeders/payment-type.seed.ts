@@ -10,10 +10,10 @@ export async function seedPaymentType() {
     //Insertar valores por defecto
     await prisma.tipoPago.createMany({
         data: [
-            { metodoDepositoId: 1, nombre: 'Pago Directo' },
-            { metodoDepositoId: 1, nombre: 'Pago Interbancario' },
-            { metodoDepositoId: 2, nombre: 'Yape' },
-            { metodoDepositoId: 2, nombre: 'Plin' },
+            { id: 1, metodoDepositoId: 1, nombre: 'Pago Directo' },
+            { id: 2, metodoDepositoId: 1, nombre: 'Pago Interbancario' },
+            { id: 3, metodoDepositoId: 2, nombre: 'Yape' },
+            { id: 4, metodoDepositoId: 2, nombre: 'Plin' },
         ],
     })
 

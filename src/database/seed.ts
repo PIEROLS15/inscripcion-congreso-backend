@@ -4,6 +4,7 @@ import { seedPaymentType } from './seeders/payment-type.seed'
 import { seedRegistrationType } from './seeders/registration-type.seed'
 import { seedClassification } from './seeders/classification.seed'
 import { seedInscriptionState } from './seeders/inscription-state'
+import { seedDocumentType } from './seeders/document-type.seed'
 
 async function main() {
 
@@ -12,6 +13,7 @@ async function main() {
     await seedRegistrationType()
     await seedClassification()
     await seedInscriptionState()
+    await seedDocumentType()
 
     console.log('✅ Seeds completados!')
 }

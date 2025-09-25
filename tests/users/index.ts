@@ -19,6 +19,7 @@ describe('User Services (mocked)', () => {
         (prisma.usuario.create as jest.Mock).mockResolvedValue(mockUser)
 
         const usuario = await createUser({
+            numero: mockUser.dni, // Agregar el campo numero
             dni: mockUser.dni,
             nombres: mockUser.nombres,
             apellidos: mockUser.apellidos,
@@ -29,6 +30,7 @@ describe('User Services (mocked)', () => {
         expect(usuario).toEqual(mockUser)
         expect(prisma.usuario.create).toHaveBeenCalledWith({
             data: {
+                numero: mockUser.dni,
                 dni: mockUser.dni,
                 nombres: mockUser.nombres,
                 apellidos: mockUser.apellidos,

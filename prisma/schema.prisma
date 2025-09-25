@@ -1,6 +1,7 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
@@ -24,18 +25,21 @@ model Usuario {
 }
 
 model TipoDocumento {
-  id          String    @id 
+  id          String    @id
   nombre      String
   abreviatura String    @unique
   usuarios    Usuario[]
 }
 
 model TipoInscripcion {
-  id          Int     @id @default(autoincrement())
-  nombre      String
-  precio      Int
-  descripcion String?
-  activo      Boolean @default(true)
+  id              Int     @id @default(autoincrement())
+  nombre          String //Titulo
+  precio          Int
+  value           String?
+  descripcion     String?
+  badge           String? // "CON KIT", "SIN KIT", "INCLUYE KIT"
+  caracteristicas Json? //[{"icon": "fa fa-check", "text": "Acceso a todas las conferencias"}]
+  activo          Boolean @default(true)
 
   inscripciones Inscripcion[]
 }

@@ -20,3 +20,10 @@ export async function deleteVoucher(id: number) {
         where: { id }
     })
 }
+
+export async function checkVoucherCodeExists(codigo: string) {
+    const voucher = await prisma.voucher.findUnique({
+        where: { codigo }
+    })
+    return !!voucher // Retorna true si existe, false si no
+}

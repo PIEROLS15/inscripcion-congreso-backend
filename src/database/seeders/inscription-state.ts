@@ -10,9 +10,11 @@ export async function seedInscriptionState() {
     //Insertar valores por defecto
     await prisma.estadoInscripcion.createMany({
         data: [
-            { nombre: 'Pendiente' },
-            { nombre: 'Pagado' },
-            { nombre: 'Cancelado' },
+            { id: 1, nombre: 'Pendiente' },        // Inscripción creada, esperando revisión
+            { id: 2, nombre: 'Aprobado' },         // Voucher verificado y aprobado
+            { id: 3, nombre: 'Rechazado' },        // Voucher rechazado (problema con el pago)
+            { id: 4, nombre: 'En Revisión' },      // Voucher siendo verificado por el equipo
+            { id: 5, nombre: 'Cancelado' },        // Inscripción cancelada por el usuario
         ],
     })
 

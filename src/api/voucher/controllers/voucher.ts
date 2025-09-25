@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getVouchers, getVoucherById, createVoucher, deleteVoucher } from '../services/voucher'
+import { getVouchers, getVoucherById, createVoucher, deleteVoucher, checkVoucherCodeExists } from '../services/voucher'
 
 export async function list(req: Request, res: Response) {
     try {
@@ -76,6 +76,26 @@ export async function remove(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).json({
             error: 'Error al eliminar el Voucher',
+            details: (error as Error).message,
+        })
+    }
+}
+
+export async function checkCode(req: Request, res: Response) {
+    try {
+        const { codigo } = req.params
+
+        if (!codigo) {
+            return res.status(400).json({ error: 'El código es requerido' })
+        }
+
+        const exists = await checkVoucherCodeExists(codigo)
+
+        return res.status(200).json({ exists })
+
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Error al verificar el código del voucher',
             details: (error as Error).message,
         })
     }

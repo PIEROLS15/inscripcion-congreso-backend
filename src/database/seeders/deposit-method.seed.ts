@@ -10,8 +10,8 @@ export async function seedDepositMehod() {
     //Insertar valores por defecto
     await prisma.metodoDeposito.createMany({
         data: [
-            { nombre: 'Banco de la Nación' },
-            { nombre: 'Billetera Digital' },
+            { id: 1, nombre: 'Banco de la Nación' },
+            { id: 2, nombre: 'Billetera Digital' },
         ],
     })
 
