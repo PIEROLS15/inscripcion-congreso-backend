@@ -49,7 +49,7 @@ RUN npm ci --only=production && npm cache clean --force
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 
 # Exponer puerto para Dokploy
-EXPOSE 3000
+EXPOSE 3000/tcp
 
 # Healthcheck - usa puerto 3010 para ser compatible con Dokploy
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
