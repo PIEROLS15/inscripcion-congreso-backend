@@ -1,18 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider          = "mysql"
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Usuario {
   id                Int            @id @default(autoincrement())
-  idTipoDocumentoId String?
-  tipoDocumento     TipoDocumento? @relation(fields: [idTipoDocumentoId], references: [id])
-  numero            String         @unique
   dni               String         @unique @db.Char(8)
   nombres           String
   apellidos         String
@@ -20,8 +17,12 @@ model Usuario {
   celular           String         @db.Char(9)
   creadoEn          DateTime       @default(now())
   actualizadoEn     DateTime       @updatedAt
+  idTipoDocumentoId String?
+  numero            String         @unique
+  inscripciones     Inscripcion[]
+  tipoDocumento     TipoDocumento? @relation(fields: [idTipoDocumentoId], references: [id])
 
-  inscripciones Inscripcion[]
+  @@index([idTipoDocumentoId], map: "Usuario_idTipoDocumentoId_fkey")
 }
 
 model TipoDocumento {
@@ -33,110 +34,71 @@ model TipoDocumento {
 
 model TipoInscripcion {
   id                 Int                 @id @default(autoincrement())
-  nombre             String //Titulo
-  tipoPlanId         Int
-  tipoPlan           TipoPlanInscripcion @relation(fields: [tipoPlanId], references: [id])
+  nombre             String
   precio             Decimal
-  institutionalPrice Decimal
-  value              String?
   descripcion        String?
-  badge              String? // "CON KIT", "SIN KIT", "INCLUYE KIT"
-  caracteristicas    Json? //[{"icon": "fa fa-check", "text": "Acceso a todas las conferencias"}]
   activo             Boolean             @default(true)
+  badge              String?
+  caracteristicas    Json?
+  value              String?
+  institutionalPrice Decimal
+  tipoPlanId         Int
+  inscripciones      Inscripcion[]
+  tipoPlan           TipoPlanInscripcion @relation(fields: [tipoPlanId], references: [id])
 
-  inscripciones Inscripcion[]
+  @@index([tipoPlanId], map: "TipoInscripcion_tipoPlanId_fkey")
 }
 
 model TipoPlanInscripcion {
   id              Int               @id @default(autoincrement())
-  nombre          String            @unique //Estudiante, Profesional, General
+  nombre          String            @unique
   descripcion     String?
-  caracteristicas Json? // [{"icon": "fa fa-check", "text": "Acceso a todas las conferencias"}]
+  caracteristicas Json?
   precioDesde     Decimal?
   PlanInscripcion TipoInscripcion[]
 }
 
 model Clasificacion {
-  id     Int    @id @default(autoincrement())
-  nombre String
-
+  id            Int           @id @default(autoincrement())
+  nombre        String
   inscripciones Inscripcion[]
 }
 
-// model MetodoDeposito {
-//   id            Int           @id @default(autoincrement())
-//   nombre        String        @unique
-//   opciones      TipoPago[]
-//   inscripciones Inscripcion[]
-// }
-
-// model TipoPago {
-//   id               Int            @id @default(autoincrement())
-//   metodoDepositoId Int
-//   metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id], onDelete: Cascade)
-
-//   nombre String
-
-//   inscripciones Inscripcion[]
-// }
-
 model EstadoInscripcion {
-  id     Int    @id @default(autoincrement())
-  nombre String @unique
-
+  id            Int           @id @default(autoincrement())
+  nombre        String        @unique
   inscripciones Inscripcion[]
 }
 
 model Inscripcion {
-  id Int @id @default(autoincrement())
-
-  usuarioId Int
-  usuario   Usuario @relation(fields: [usuarioId], references: [id], onUpdate: Cascade)
-
-  tipoInscripcionId Int?
-  tipoInscripcion   TipoInscripcion? @relation(fields: [tipoInscripcionId], references: [id])
-
-  modalidadDeposito String? // Presencial o Virtual
-  bancoSeleccionado String? // Banco donde hizo el deposito
-  tipoOperacion     String? // Si es otro tipo de pago inmediatante o interbancario
-  billeteraDigital  String? // Si pago con billetera digital
-
-  file            String? // Nombre del archivo
-  numeroOperacion String   @unique //Yape, transaccion
-  fechaPago       DateTime
-
-  pago                 Decimal //Pago total en soles
-  esEmailInstitucional Boolean           @default(false) // Si uso correo institucional
-  hasDiscount          Boolean           @default(false) // Si se le aplico un descuento
-  descuento            Decimal           @default(0) // El descuento que se le hizo 
+  id                   Int               @id @default(autoincrement())
+  usuarioId            Int
+  tipoInscripcionId    Int?
+  clasificacionId      Int?
   estadoId             Int
+  creadoEn             DateTime          @default(now())
+  actualizadoEn        DateTime          @updatedAt
+  bancoSeleccionado    String?
+  billeteraDigital     String?
+  descuento            Decimal           @default(0.000000000000000000000000000000)
+  esEmailInstitucional Boolean           @default(false)
+  fechaPago            DateTime
+  file                 String?
+  hasDiscount          Boolean           @default(false)
+  modalidadDeposito    String?
+  numeroOperacion      String            @unique
+  pago                 Decimal
+  tipoOperacion        String?
+  clasificacion        Clasificacion?    @relation(fields: [clasificacionId], references: [id])
   estado               EstadoInscripcion @relation(fields: [estadoId], references: [id])
+  tipoInscripcion      TipoInscripcion?  @relation(fields: [tipoInscripcionId], references: [id])
+  usuario              Usuario           @relation(fields: [usuarioId], references: [id])
 
-  creadoEn      DateTime @default(now())
-  actualizadoEn DateTime @updatedAt
-
-  //legacy start
-  clasificacionId Int?
-  clasificacion   Clasificacion? @relation(fields: [clasificacionId], references: [id])
-  // metodoDepositoId Int?
-  // metodoDeposito   MetodoDeposito? @relation(fields: [metodoDepositoId], references: [id])
-  // tipoPagoId       Int?
-  // tipoPago         TipoPago?       @relation(fields: [tipoPagoId], references: [id])
-  // voucherId        Int?
-  // voucher          Voucher?        @relation(fields: [voucherId], references: [id])
-  //legacy fin
+  @@index([clasificacionId], map: "Inscripcion_clasificacionId_fkey")
+  @@index([estadoId], map: "Inscripcion_estadoId_fkey")
+  @@index([tipoInscripcionId], map: "Inscripcion_tipoInscripcionId_fkey")
+  @@index([usuarioId], map: "Inscripcion_usuarioId_fkey")
 }
-
-// model Voucher {
-//   id        Int      @id @default(autoincrement())
-//   codigo    String   @unique
-//   fechaPago DateTime
-//   filename  String?
-//   path      String?
-//   mime      String?
-
-//   inscripciones Inscripcion[]
-// }
 
 model Contact {
   id        Int      @id @default(autoincrement())
