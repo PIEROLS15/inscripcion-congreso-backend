@@ -54,6 +54,7 @@ export async function createInscription(data: CreateInscription): Promise<Inscri
             user = await tx.usuario.create({
                 data: {
                     numero: data.usuario.dni, // El campo numero debe ser igual al DNI
+                    idTipoDocumentoId: data.usuario.idTipoDocumentoId,
                     dni: data.usuario.dni,
                     nombres: data.usuario.nombres,
                     apellidos: data.usuario.apellidos,
