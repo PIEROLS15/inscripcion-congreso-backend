@@ -36,6 +36,10 @@ RUN adduser -S nodejs -u 1001
 # Establecer directorio de trabajo
 WORKDIR /app
 
+# Crear carpetas necesarias para la aplicación
+RUN mkdir -p uploads && \
+    chown nodejs:nodejs /app uploads
+
 # Cambiar propiedad del directorio
 RUN chown nodejs:nodejs /app
 USER nodejs

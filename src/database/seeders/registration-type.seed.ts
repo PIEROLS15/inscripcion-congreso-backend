@@ -14,8 +14,10 @@ export async function seedRegistrationType() {
                 id: 1,
                 nombre: 'ESTUDIANTES',
                 badge: 'CON KIT',
-                precio: 120,
                 descripcion: 'La experiencia completa para estudiantes con kit de merchandising oficial.',
+                precio: 120,
+                institutionalPrice: 100,
+                tipoPlanId: 1,
                 activo: true,
                 caracteristicas: [
                     { icon: 'heroicons:academic-cap', text: 'Certificado Digital (100h)' },
@@ -30,6 +32,8 @@ export async function seedRegistrationType() {
                 nombre: 'ESTUDIANTES',
                 badge: 'SIN KIT',
                 precio: 60,
+                institutionalPrice: 40,
+                tipoPlanId: 1,
                 descripcion: 'La opción económica para estudiantes, con acceso a todas las ponencias.',
                 activo: true,
                 caracteristicas: [
@@ -42,18 +46,37 @@ export async function seedRegistrationType() {
             },
             {
                 id: 3,
-                nombre: 'PÚBLICO GENERAL',
+                nombre: 'PROFESIONALES Y PUBLICO EN GENERAL CON KIT',
+                badge: 'CON KIT',
                 precio: 140,
-                descripcion: 'Acceso total con kit para profesionales y cualquier persona interesada.',
+                institutionalPrice: 120,
+                tipoPlanId: 2,
+                descripcion: 'La experiencia completa para profesionales y público en general con kit de merchandising oficial.',
                 activo: true,
-                badge: 'INCLUYE KIT',
                 caracteristicas: [
                     { icon: 'heroicons:academic-cap', text: 'Certificado Digital (100h)' },
                     { icon: 'heroicons:gift', text: 'Kit de Merchandising Oficial' },
                     { icon: 'heroicons:identification', text: 'Carnet de Identificación' },
                     { icon: 'heroicons:ticket', text: 'Acceso a todas las ponencias' },
                 ],
-                value: 'publico_general_con_kit'
+                value: 'general_con_kit'
+            },
+            {
+                id: 4,
+                nombre: 'PROFESIONALES Y PUBLICO EN GENERAL SIN KIT',
+                badge: 'SIN KIT',
+                precio: 80,
+                institutionalPrice: 60,
+                tipoPlanId: 2,
+                descripcion: 'La opción económica para profesionales y público en general, con acceso a todas las ponencias.',
+                activo: true,
+                caracteristicas: [
+                    { icon: 'heroicons:academic-cap', text: 'Certificado Digital (100h)' },
+                    { icon: 'heroicons:identification', text: 'Carnet de Identificación' },
+                    { icon: 'heroicons:ticket', text: 'Acceso a todas las ponencias' },
+                    { icon: 'heroicons:x-mark', text: 'No incluye Kit' },
+                ],
+                value: 'general_sin_kit'
             }
         ],
     })

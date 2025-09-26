@@ -13,12 +13,14 @@ export async function getRegistrationTypeById(id: number) {
 }
 
 export async function createRegistrationType(data: RegistrationType) {
-    return prisma.tipoInscripcion.create({
-        data: {
-            ...data,
-            caracteristicas: data.caracteristicas ? data.caracteristicas as unknown as Prisma.InputJsonValue : Prisma.JsonNull
-        }
-    })
+    return { success: false, message: 'no implementado', data }
+
+    // return prisma.tipoInscripcion.create({
+    //     data: {
+    //         ...data,
+    //         caracteristicas: data.caracteristicas ? data.caracteristicas as unknown as Prisma.InputJsonValue : Prisma.JsonNull
+    //     }
+    // })
 }
 
 export async function updateRegistrationType(id: number, data: Partial<RegistrationType>) {

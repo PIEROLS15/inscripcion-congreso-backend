@@ -7,10 +7,7 @@ export async function getInscriptions() {
             usuario: true,
             tipoInscripcion: true,
             clasificacion: true,
-            metodoDeposito: true,
-            tipoPago: true,
             estado: true,
-            voucher: true,
         },
     })
 }
@@ -22,16 +19,13 @@ export async function getInscriptionById(id: number) {
             usuario: true,
             tipoInscripcion: true,
             clasificacion: true,
-            metodoDeposito: true,
-            tipoPago: true,
             estado: true,
-            voucher: true,
         },
     })
 }
 
 export async function createInscription(data: CreateInscription): Promise<Inscription> {
-    // Transacción para crear usuario, voucher e inscripción de forma atómica
+    // Transacción para crear usuario e inscripción de forma atómica
     return await prisma.$transaction(async (tx) => {
         // 1. Verificar si el usuario ya existe por email o DNI
         const existingUser = await tx.usuario.findFirst({
@@ -69,43 +63,49 @@ export async function createInscription(data: CreateInscription): Promise<Inscri
             })
         }
 
-        // 4. Verificar si el código del voucher ya existe
-        const existingVoucher = await tx.voucher.findUnique({
-            where: { codigo: data.voucher.codigo }
+
+        // 4. Verificar si el código de operación ya existe
+        const existingOperation = await tx.inscripcion.findFirst({
+            where: { numeroOperacion: data.numeroOperacion }
         })
 
-        if (existingVoucher) {
-            throw new Error(`El código de voucher "${data.voucher.codigo}" ya está registrado. Por favor, verifique su código o use uno diferente.`)
+        if (existingOperation) {
+            throw new Error(`El código de operación "${data.numeroOperacion}" ya está registrado. Por favor, verifique su código o use uno diferente.`)
         }
 
-        // 5. Crear el voucher
-        const voucher = await tx.voucher.create({
-            data: {
-                codigo: data.voucher.codigo,
-                fechaPago: data.voucher.fechaPago,
-                filename: data.voucher.archivo || null,
-                path: data.voucher.archivo || null,
-            }
-        })
+        // Si el email es institucional, marcar el campo correspondiente
+        let hasDiscountInstitucionalEmail = isInstitutionalEmail(data.usuario.correoElectronico)
 
-        // 6. Crear la inscripción
+        let planInscripcion = await tx.tipoInscripcion.findUnique({
+            where: { id: data.tipoInscripcionId }
+        })
+        if (!planInscripcion) {
+            throw new Error(`El tipo de inscripción con id "${data.tipoInscripcionId}" no existe.`)
+        }
+
+        // 5. Crear la inscripción con todos los datos
         const inscription = await tx.inscripcion.create({
             data: {
                 usuarioId: user.id,
-                voucherId: voucher.id,
                 tipoInscripcionId: data.tipoInscripcionId || null,
                 clasificacionId: data.clasificacionId || null,
-                metodoDepositoId: data.metodoDepositoId,
-                tipoPagoId: data.tipoPagoId,
+                modalidadDeposito: data.modalidadDeposito || null,
+                bancoSeleccionado: data.bancoSeleccionado || null,
+                tipoOperacion: data.tipoOperacion || null,
+                billeteraDigital: data.billeteraDigital || null,
+                file: data.file || null,
+                numeroOperacion: data.numeroOperacion,
+                fechaPago: data.fechaPago,
+                pago: hasDiscountInstitucionalEmail ? planInscripcion.institutionalPrice : planInscripcion.precio,
+                esEmailInstitucional: hasDiscountInstitucionalEmail,
+                hasDiscount: data.hasDiscount || false,
+                descuento: data.descuento || 0,
                 estadoId: data.estadoId || 1, // Estado por defecto 'Pendiente'
             },
             include: {
                 usuario: true,
-                voucher: true,
                 tipoInscripcion: true,
                 clasificacion: true,
-                metodoDeposito: true,
-                tipoPago: true,
                 estado: true,
             }
         })
@@ -118,4 +118,11 @@ export async function deleteInscription(id: number) {
     return prisma.inscripcion.delete({
         where: { id }
     })
+}
+
+
+const isInstitutionalEmail = (email: string): boolean => {
+    const institutionalDomains = ['undc.edu.pe']
+    const emailDomain = email.split('@')[1].toLowerCase()
+    return institutionalDomains.includes(emailDomain)
 }

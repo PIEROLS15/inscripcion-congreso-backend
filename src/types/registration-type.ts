@@ -8,6 +8,7 @@ export interface RegistrationType {
     badge?: string
     precio: number
     descripcion: string
+    institutionalPrice: number 
     activo: boolean
     caracteristicas?: Caracteristica[] | null
     value?: string

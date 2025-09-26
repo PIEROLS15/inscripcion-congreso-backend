@@ -39,35 +39,61 @@ export async function create(req: RequestWithFile, res: Response) {
         let requestData
         
         if (req.is('multipart/form-data')) {
-            // Si viene con archivo (multipart/form-data)
+            // Si viene con archivo (multipart/form-data) - NUEVO ESQUEMA
             const file = req.file
             requestData = {
-                ...req.body,
-                // Convertir campos que deben ser enteros
-                tipoInscripcionId: parseInt(req.body.tipoInscripcionId, 10),
-                clasificacionId: req.body.clasificacionId ? parseInt(req.body.clasificacionId, 10) : null,
-                metodoDepositoId: parseInt(req.body.metodoDepositoId, 10),
-                tipoPagoId: parseInt(req.body.tipoPagoId, 10),
+                // Datos del usuario
                 usuario: JSON.parse(req.body.usuario || '{}'),
-                voucher: {
-                    codigo: req.body.codigo,
-                    fechaPago: new Date(req.body.fechaPago),
-                    archivo: file ? file.filename : undefined
-                }
+                
+                // IDs de relaciones
+                tipoInscripcionId: parseInt(req.body.tipoInscripcionId, 10),
+                clasificacionId: req.body.clasificacionId ? parseInt(req.body.clasificacionId, 10) : undefined,
+                estadoId: req.body.estadoId ? parseInt(req.body.estadoId, 10) : 1,
+                
+                // Nuevos campos de pago integrados
+                modalidadDeposito: req.body.modalidadDeposito || undefined,
+                bancoSeleccionado: req.body.bancoSeleccionado || undefined,
+                tipoOperacion: req.body.tipoOperacion || undefined,
+                billeteraDigital: req.body.billeteraDigital || undefined,
+                numeroOperacion: req.body.numeroOperacion,
+                fechaPago: new Date(req.body.fechaPago),
+                pago: parseFloat(req.body.pago) || 0,
+                
+                // Campos de descuento (convertir strings a boolean)
+                esEmailInstitucional: req.body.esEmailInstitucional === 'true',
+                hasDiscount: req.body.hasDiscount === 'true',
+                descuento: parseFloat(req.body.descuento) || 0,
+                
+                // Archivo
+                file: file ? file.filename : undefined
             }
         } else {
-            // Si viene como JSON puro
+            // Si viene como JSON puro - NUEVO ESQUEMA
             requestData = {
-                ...req.body,
-                // Convertir campos que deben ser enteros
+                // Datos del usuario
+                usuario: req.body.usuario,
+                
+                // IDs de relaciones
                 tipoInscripcionId: parseInt(req.body.tipoInscripcionId, 10),
-                clasificacionId: req.body.clasificacionId ? parseInt(req.body.clasificacionId, 10) : null,
-                metodoDepositoId: parseInt(req.body.metodoDepositoId, 10),
-                tipoPagoId: parseInt(req.body.tipoPagoId, 10),
-                voucher: {
-                    ...req.body.voucher,
-                    fechaPago: new Date(req.body.voucher.fechaPago)
-                }
+                clasificacionId: req.body.clasificacionId ? parseInt(req.body.clasificacionId, 10) : undefined,
+                estadoId: req.body.estadoId ? parseInt(req.body.estadoId, 10) : 1,
+                
+                // Nuevos campos de pago integrados
+                modalidadDeposito: req.body.modalidadDeposito || undefined,
+                bancoSeleccionado: req.body.bancoSeleccionado || undefined,
+                tipoOperacion: req.body.tipoOperacion || undefined,
+                billeteraDigital: req.body.billeteraDigital || undefined,
+                numeroOperacion: req.body.numeroOperacion,
+                fechaPago: new Date(req.body.fechaPago),
+                pago: parseFloat(req.body.pago) || 0,
+                
+                // Campos de descuento (asegurar que sean boolean)
+                esEmailInstitucional: Boolean(req.body.esEmailInstitucional),
+                hasDiscount: Boolean(req.body.hasDiscount),
+                descuento: parseFloat(req.body.descuento) || 0,
+                
+                // Archivo
+                file: req.body.file || undefined
             }
         }
         
@@ -85,10 +111,10 @@ export async function create(req: RequestWithFile, res: Response) {
         const errorMessage = (error as Error).message
         
         // Manejo específico de errores comunes
-        if (errorMessage.includes('código de voucher') && errorMessage.includes('ya está registrado')) {
+        if (errorMessage.includes('código de operación') && errorMessage.includes('ya está registrado')) {
             return res.status(409).json({
                 success: false,
-                error: 'Código de voucher duplicado',
+                error: 'Código de operación duplicado',
                 message: errorMessage,
             })
         }

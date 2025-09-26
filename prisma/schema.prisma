@@ -32,16 +32,28 @@ model TipoDocumento {
 }
 
 model TipoInscripcion {
-  id              Int     @id @default(autoincrement())
-  nombre          String //Titulo
-  precio          Int
-  value           String?
-  descripcion     String?
-  badge           String? // "CON KIT", "SIN KIT", "INCLUYE KIT"
-  caracteristicas Json? //[{"icon": "fa fa-check", "text": "Acceso a todas las conferencias"}]
-  activo          Boolean @default(true)
+  id                 Int                 @id @default(autoincrement())
+  nombre             String //Titulo
+  tipoPlanId         Int
+  tipoPlan           TipoPlanInscripcion @relation(fields: [tipoPlanId], references: [id])
+  precio             Decimal
+  institutionalPrice Decimal
+  value              String?
+  descripcion        String?
+  badge              String? // "CON KIT", "SIN KIT", "INCLUYE KIT"
+  caracteristicas    Json? //[{"icon": "fa fa-check", "text": "Acceso a todas las conferencias"}]
+  activo             Boolean             @default(true)
 
   inscripciones Inscripcion[]
+}
+
+model TipoPlanInscripcion {
+  id              Int               @id @default(autoincrement())
+  nombre          String            @unique //Estudiante, Profesional, General
+  descripcion     String?
+  caracteristicas Json? // [{"icon": "fa fa-check", "text": "Acceso a todas las conferencias"}]
+  precioDesde     Decimal?
+  PlanInscripcion TipoInscripcion[]
 }
 
 model Clasificacion {
@@ -51,22 +63,22 @@ model Clasificacion {
   inscripciones Inscripcion[]
 }
 
-model MetodoDeposito {
-  id            Int           @id @default(autoincrement())
-  nombre        String        @unique
-  opciones      TipoPago[]
-  inscripciones Inscripcion[]
-}
+// model MetodoDeposito {
+//   id            Int           @id @default(autoincrement())
+//   nombre        String        @unique
+//   opciones      TipoPago[]
+//   inscripciones Inscripcion[]
+// }
 
-model TipoPago {
-  id               Int            @id @default(autoincrement())
-  metodoDepositoId Int
-  metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id], onDelete: Cascade)
+// model TipoPago {
+//   id               Int            @id @default(autoincrement())
+//   metodoDepositoId Int
+//   metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id], onDelete: Cascade)
 
-  nombre String
+//   nombre String
 
-  inscripciones Inscripcion[]
-}
+//   inscripciones Inscripcion[]
+// }
 
 model EstadoInscripcion {
   id     Int    @id @default(autoincrement())
@@ -84,35 +96,47 @@ model Inscripcion {
   tipoInscripcionId Int?
   tipoInscripcion   TipoInscripcion? @relation(fields: [tipoInscripcionId], references: [id])
 
-  clasificacionId Int?
-  clasificacion   Clasificacion? @relation(fields: [clasificacionId], references: [id])
+  modalidadDeposito String? // Presencial o Virtual
+  bancoSeleccionado String? // Banco donde hizo el deposito
+  tipoOperacion     String? // Si es otro tipo de pago inmediatante o interbancario
+  billeteraDigital  String? // Si pago con billetera digital
 
-  metodoDepositoId Int
-  metodoDeposito   MetodoDeposito @relation(fields: [metodoDepositoId], references: [id])
+  file            String? // Nombre del archivo
+  numeroOperacion String   @unique //Yape, transaccion
+  fechaPago       DateTime
 
-  tipoPagoId Int
-  tipoPago   TipoPago @relation(fields: [tipoPagoId], references: [id])
-
-  estadoId Int
-  estado   EstadoInscripcion @relation(fields: [estadoId], references: [id])
-
-  voucherId Int
-  voucher   Voucher @relation(fields: [voucherId], references: [id])
+  pago                 Decimal //Pago total en soles
+  esEmailInstitucional Boolean           @default(false) // Si uso correo institucional
+  hasDiscount          Boolean           @default(false) // Si se le aplico un descuento
+  descuento            Decimal           @default(0) // El descuento que se le hizo 
+  estadoId             Int
+  estado               EstadoInscripcion @relation(fields: [estadoId], references: [id])
 
   creadoEn      DateTime @default(now())
   actualizadoEn DateTime @updatedAt
+
+  //legacy start
+  clasificacionId Int?
+  clasificacion   Clasificacion? @relation(fields: [clasificacionId], references: [id])
+  // metodoDepositoId Int?
+  // metodoDeposito   MetodoDeposito? @relation(fields: [metodoDepositoId], references: [id])
+  // tipoPagoId       Int?
+  // tipoPago         TipoPago?       @relation(fields: [tipoPagoId], references: [id])
+  // voucherId        Int?
+  // voucher          Voucher?        @relation(fields: [voucherId], references: [id])
+  //legacy fin
 }
 
-model Voucher {
-  id        Int      @id @default(autoincrement())
-  codigo    String   @unique
-  fechaPago DateTime
-  filename  String?
-  path      String?
-  mime      String?
+// model Voucher {
+//   id        Int      @id @default(autoincrement())
+//   codigo    String   @unique
+//   fechaPago DateTime
+//   filename  String?
+//   path      String?
+//   mime      String?
 
-  inscripciones Inscripcion[]
-}
+//   inscripciones Inscripcion[]
+// }
 
 model Contact {
   id        Int      @id @default(autoincrement())

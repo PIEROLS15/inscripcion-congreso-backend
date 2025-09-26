@@ -54,12 +54,19 @@ export const mockInscriptionState = {
 export const mockInscription = {
     usuario: mockUser,
     tipoInscripcionId: 2,
-    clasificacionId: 3,
-    metodoDepositoId: 1,
-    tipoPagoId: 1,
+    clasificacionId: 1,
+    modalidadDeposito: 'banco',
+    bancoSeleccionado: 'bcp',
+    tipoOperacion: 'directo',
+    billeteraDigital: undefined,
+    file: 'voucher-123456.jpg',
+    numeroOperacion: '1233211a',
+    fechaPago: new Date('2025-09-19T10:30:00.000Z'),
+    pago: 50.00,
+    esEmailInstitucional: false,
+    hasDiscount: false,
+    descuento: 0,
     estadoId: 1,
-    voucherId: 2,
-    voucher: mockVoucher
 }
 
 export const mockContact = {
