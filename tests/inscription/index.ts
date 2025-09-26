@@ -1,41 +1,34 @@
 import { prisma } from '../../src/database/prisma'
 import { getInscriptions, getInscriptionById, createInscription, deleteInscription } from '../../src/api/inscription/services/inscription'
-import { mockInscription, mockUser } from '../helpers/mock'
+import { mockInscription } from '../helpers/mock'
 
 jest.mock('../../src/database/prisma', () => ({
     prisma: {
+        $transaction: jest.fn(),
         inscripcion: {
             create: jest.fn(),
             findMany: jest.fn(),
             findUnique: jest.fn(),
+            findFirst: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
         },
         usuario: {
             create: jest.fn(),
+            findFirst: jest.fn(),
         },
     },
 }))
 
 describe('Endpoints Inscriptions', () => {
     it('should create an inscription correctly', async () => {
-        (prisma.usuario.create as jest.Mock).mockResolvedValue(mockUser),
-            (prisma.inscripcion.create as jest.Mock).mockResolvedValue(mockInscription)
+        const mockTransaction = jest.fn().mockResolvedValue(mockInscription);
+        (prisma.$transaction as jest.Mock).mockImplementation(mockTransaction)
 
         const inscription = await createInscription(mockInscription)
 
         expect(inscription).toEqual(mockInscription)
-        expect(prisma.inscripcion.create).toHaveBeenCalledWith({
-            data: {
-                usuarioId: mockInscription.usuario.id,
-                tipoInscripcionId: mockInscription.tipoInscripcionId,
-                clasificacionId: mockInscription.clasificacionId,
-                metodoDepositoId: mockInscription.metodoDepositoId,
-                tipoPagoId: mockInscription.tipoPagoId,
-                estadoId: mockInscription.estadoId,
-                voucherId: mockInscription.voucherId,
-            },
-        })
+        expect(prisma.$transaction).toHaveBeenCalled()
     })
 
     it('should return all inscriptions', async () => {
@@ -44,7 +37,14 @@ describe('Endpoints Inscriptions', () => {
         const inscriptions = await getInscriptions()
 
         expect(inscriptions).toEqual([mockInscription])
-        expect(prisma.inscripcion.findMany).toHaveBeenCalled()
+        expect(prisma.inscripcion.findMany).toHaveBeenCalledWith({
+            include: {
+                usuario: true,
+                tipoInscripcion: true,
+                clasificacion: true,
+                estado: true,
+            },
+        })
     })
 
     it('should return an inscription by id', async () => {
@@ -56,13 +56,10 @@ describe('Endpoints Inscriptions', () => {
         expect(prisma.inscripcion.findUnique).toHaveBeenCalledWith({
             where: { id: 1 },
             include: {
+                usuario: true,
+                tipoInscripcion: true,
                 clasificacion: true,
                 estado: true,
-                metodoDeposito: true,
-                tipoInscripcion: true,
-                tipoPago: true,
-                usuario: true,
-                voucher: true,
             },
         })
     })

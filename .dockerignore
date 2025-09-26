@@ -1,0 +1,51 @@
+# Dependencias
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de desarrollo
+*.log
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Tests
+tests
+coverage
+*.test.js
+*.spec.js
+
+# Documentación
+README.md
+docs
+
+# Build artifacts (se construirán dentro del contenedor)
+dist
+build
+
+# Otros
+tmp
+temp
+.nyc_output

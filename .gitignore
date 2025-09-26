@@ -31,3 +31,7 @@ coverage/
 *.tsbuildinfo
 
 /generated/prisma
+
+# Ignorar todos los archivos en uploads excepto .gitkeep
+uploads/*
+!uploads/.gitkeep

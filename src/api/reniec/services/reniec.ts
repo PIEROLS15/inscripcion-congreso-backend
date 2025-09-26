@@ -1,6 +1,20 @@
 import { ReniecResponse } from '../../../types/reniec'
+import { fetchNubeTecData } from '../providers/nube-tec.api'
+import { DocumentType } from '../providers/types'
 
 export async function fetchReniecData(number: string) {
+
+  const documentType = number.length === 8 ? DocumentType.DNI : DocumentType.CE
+  
+  switch (documentType) {
+    case DocumentType.DNI:
+      await fetchNubeTecData(documentType, number)
+      break
+    case DocumentType.CE:
+      throw new Error('Consulta de CE no soportada por RENIEC')
+    default:
+      throw new Error('Tipo de documento no soportado')
+  } 
   const tokenReniec = process.env.RENIEC_TOKEN
   const api_dni = process.env.API_RENIEC_DNI
 
@@ -12,7 +26,7 @@ export async function fetchReniecData(number: string) {
     throw new Error('Falta API_RENIEC_DNI')
   }
 
-  const response = await fetch(`${api_dni}${number}`, {
+  const response = await fetch(`${api_dni}v1/reniec/dni/${number}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${tokenReniec}`,
