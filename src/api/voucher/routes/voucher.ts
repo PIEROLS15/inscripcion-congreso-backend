@@ -17,6 +17,12 @@ const routes: AppRoute[] = [
     },
     {
         method: 'get',
+        path: '/v1/voucher/check/:codigo',
+        handler: voucherController.checkCode,
+        middlewares: [],
+    },
+    {
+        method: 'get',
         path: '/v1/voucher/:id',
         handler: voucherController.find,
         middlewares: [],

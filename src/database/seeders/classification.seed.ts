@@ -10,42 +10,16 @@ export async function seedClassification() {
     //Insertar valores por defecto
     await prisma.clasificacion.createMany({
         data: [
-            {
-                nombre: 'DOCENTE',
-            },
-            {
-                nombre: 'POSGRADO',
-            },
-            {
-                nombre: 'ESTUDIANTE - I CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - II CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - III CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - IV CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - V CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - VI CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - VII CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - VIII CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - IX CICLO',
-            },
-            {
-                nombre: 'ESTUDIANTE - X CICLO',
-            },
+            { id: 1, nombre: 'ESTUDIANTE - I CICLO', },
+            { id: 2, nombre: 'ESTUDIANTE - II CICLO', },
+            { id: 3, nombre: 'ESTUDIANTE - III CICLO', },
+            { id: 4, nombre: 'ESTUDIANTE - IV CICLO', },
+            { id: 5, nombre: 'ESTUDIANTE - V CICLO', },
+            { id: 6, nombre: 'ESTUDIANTE - VI CICLO', },
+            { id: 7, nombre: 'ESTUDIANTE - VII CICLO', },
+            { id: 8, nombre: 'ESTUDIANTE - VIII CICLO', },
+            { id: 9, nombre: 'ESTUDIANTE - IX CICLO', },
+            { id: 10, nombre: 'ESTUDIANTE - X CICLO', },
         ],
     })
 

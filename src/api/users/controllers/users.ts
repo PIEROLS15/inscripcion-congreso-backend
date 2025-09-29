@@ -19,7 +19,13 @@ export async function create(req: Request, res: Response) {
     try {
         const data = await usuarioSchema.validate(req.body)
 
-        const usuario = await createUser(data)
+        // Agregar el campo numero que es igual al DNI
+        const userDataWithNumber = {
+            ...data,
+            numero: data.dni
+        }
+
+        const usuario = await createUser(userDataWithNumber)
         return res.status(201).json(usuario)
     } catch (error) {
         return res.status(400).json({
