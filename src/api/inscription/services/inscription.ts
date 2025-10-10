@@ -1,5 +1,7 @@
 import { prisma } from '../../../database/prisma'
 import { Inscription, CreateInscription } from '../../../types/inscription'
+import { generateInscripcionPDF } from '../utils/generatePdf'
+import { sendApprovalEmail } from '../utils/sendEmail'
 
 export async function getInscriptions() {
     return prisma.inscripcion.findMany({
@@ -126,4 +128,64 @@ const isInstitutionalEmail = (email: string): boolean => {
     const institutionalDomains = ['undc.edu.pe']
     const emailDomain = email.split('@')[1].toLowerCase()
     return institutionalDomains.includes(emailDomain)
+}
+
+export async function updateInscriptionStatus(id: number, estadoId: number) {
+    return await prisma.$transaction(async (tx) => {
+        const inscription = await tx.inscripcion.findUnique({
+            where: { id },
+            include: { usuario: true },
+        })
+
+        if (!inscription) {
+            throw new Error(`No se encontró la inscripción con id ${id}`)
+        }
+
+        if (estadoId !== 2) {
+            return await tx.inscripcion.update({
+                where: { id },
+                data: { estadoId },
+            })
+        }
+
+        const user = inscription.usuario
+        if (!user) throw new Error('Inscripción sin usuario asociado')
+
+        let pdfPath: string
+
+        try {
+            pdfPath = await generateInscripcionPDF({
+                id: user.id,
+                nombres: user.nombres,
+                apellidos: user.apellidos,
+                dni: user.dni,
+                correo: user.correoElectronico,
+                celular: user.celular,
+                fechaCreacion: inscription.creadoEn,
+                fechaAprobada: inscription.actualizadoEn
+            })
+        } catch (err) {
+            console.error('Error generando PDF:', err)
+            throw new Error('No se pudo generar el certificado')
+        }
+
+        try {
+            await sendApprovalEmail(user.correoElectronico, user.nombres, pdfPath)
+        } catch (err) {
+            console.error('Error enviando correo:', err)
+            throw new Error('No se pudo enviar el correo de aprobación')
+        }
+        const updated = await tx.inscripcion.update({
+            where: { id },
+            data: { estadoId },
+            include: {
+                usuario: true,
+                tipoInscripcion: true,
+                clasificacion: true,
+                estado: true,
+            },
+        })
+
+        return updated
+    })
 }
