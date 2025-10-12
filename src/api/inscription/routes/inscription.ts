@@ -1,13 +1,14 @@
 import * as inscriptionController from '../controllers/inscription'
 import { AppRoute, buildRouter } from '../../../core/routes'
 import { upload } from '../../../middlewares/upload'
+import { verifyAdminRole } from '../../../middlewares/auth'
 
 const routes: AppRoute[] = [
     {
         method: 'get',
         path: '/v1/inscription',
         handler: inscriptionController.list,
-        middlewares: [],
+        middlewares: [verifyAdminRole],
     },
     {
         method: 'post',
@@ -19,19 +20,19 @@ const routes: AppRoute[] = [
         method: 'get',
         path: '/v1/inscription/:id',
         handler: inscriptionController.find,
-        middlewares: [],
+        middlewares: [verifyAdminRole],
     },
     {
         method: 'delete',
         path: '/v1/inscription/:id',
         handler: inscriptionController.remove,
-        middlewares: [],
+        middlewares: [verifyAdminRole],
     },
     {
         method: 'put',
         path: '/v1/inscription/:id/status',
         handler: inscriptionController.updateStatus,
-        middlewares: [],
+        middlewares: [verifyAdminRole],
     }
 ]
 
