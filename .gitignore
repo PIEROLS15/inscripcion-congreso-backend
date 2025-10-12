@@ -33,5 +33,5 @@ coverage/
 /generated/prisma
 
 # Ignorar todos los archivos en uploads excepto .gitkeep
-uploads/*
-!uploads/.gitkeep
+# uploads/*
+# !uploads/.gitkeep
