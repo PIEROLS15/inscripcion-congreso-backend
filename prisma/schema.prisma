@@ -8,6 +8,24 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model Administradores {
+  id                Int      @id @default(autoincrement())
+  nombres           String
+  apellidos         String
+  correoElectronico String   @unique
+  contrasena        String
+  creadoEn          DateTime @default(now())
+  actualizadoEn     DateTime @updatedAt
+  rolId             Int
+  rol               Roles    @relation(fields: [rolId], references: [id])
+}
+
+model Roles {
+  id              Int               @id @default(autoincrement())
+  nombre          String
+  administradores Administradores[]
+}
+
 model Usuario {
   id                Int            @id @default(autoincrement())
   dni               String         @unique @db.Char(8)
