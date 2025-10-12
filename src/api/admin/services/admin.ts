@@ -43,7 +43,7 @@ export async function createAdmin(data: Administradores) {
         data: {
             ...data,
             contrasena: hashedPassword,
-            rolId: 2,
+            rolId: 1,
             creadoEn: new Date(),
             actualizadoEn: new Date(),
         },
