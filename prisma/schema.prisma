@@ -39,6 +39,7 @@ model Usuario {
   numero            String         @unique
   inscripciones     Inscripcion[]
   tipoDocumento     TipoDocumento? @relation(fields: [idTipoDocumentoId], references: [id])
+  asistencias       Asistencia[]   @relation("UsuarioAsistencia")
 
   @@index([idTipoDocumentoId], map: "Usuario_idTipoDocumentoId_fkey")
 }
@@ -126,4 +127,30 @@ model Contact {
   subject   String
   message   String
   timestamp DateTime @default(now())
+}
+
+model Evento {
+  id            Int    @id @default(autoincrement())
+  nombre        String    @db.VarChar(150)
+  fecha         DateTime
+  hora_comienzo DateTime
+  hora_termino  DateTime
+
+  asistencias    Asistencia[] @relation("EventoAsistencia")
+
+  @@index([id], map: "evento_pkey")
+}
+
+model Asistencia {
+  id             Int    @id @default(autoincrement())
+  dia_hora       DateTime  @default(now())
+  id_usuario     Int
+  id_evento      Int
+
+  Evento         Evento    @relation("EventoAsistencia", fields: [id_evento], references: [id])
+  Usuario        Usuario   @relation("UsuarioAsistencia", fields: [id_usuario], references: [id])
+
+  @@index([id_usuario], map: "idx_asistencia_id")
+  @@index([id_evento], map: "idx_asistencia_evento")
+  @@unique([id_usuario, id_evento], map: "uq_asistencia_persona_evento")
 }
