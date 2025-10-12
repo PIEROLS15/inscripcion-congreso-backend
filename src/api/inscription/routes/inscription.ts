@@ -26,6 +26,12 @@ const routes: AppRoute[] = [
         path: '/v1/inscription/:id',
         handler: inscriptionController.remove,
         middlewares: [],
+    },
+    {
+        method: 'put',
+        path: '/v1/inscription/:id/status',
+        handler: inscriptionController.updateStatus,
+        middlewares: [],
     }
 ]
 

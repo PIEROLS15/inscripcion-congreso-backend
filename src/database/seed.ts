@@ -6,6 +6,7 @@ import { seedClassification } from './seeders/classification.seed'
 import { seedInscriptionState } from './seeders/inscription-state'
 import { seedDocumentType } from './seeders/document-type.seed'
 import { seedTypePlanInscripcion } from './seeders/type-plan-inscription.seed'
+import { seedRoles } from './seeders/roles.seed'
 
 async function main() {
 
@@ -16,6 +17,7 @@ async function main() {
     await seedClassification()
     await seedInscriptionState()
     await seedDocumentType()
+    await seedRoles()
 
     console.log('✅ Seeds completados!')
 }
