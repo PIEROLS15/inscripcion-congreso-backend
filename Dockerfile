@@ -38,7 +38,7 @@ WORKDIR /app
 
 # Crear carpetas necesarias para la aplicación
 RUN mkdir -p uploads && \
-    chown nodejs:nodejs /app uploads
+  chown nodejs:nodejs /app uploads
 
 # Cambiar propiedad del directorio
 RUN chown nodejs:nodejs /app
@@ -52,6 +52,9 @@ RUN npm ci --only=production && npm cache clean --force
 # Copiar archivos compilados
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 
+# Copiar las plantillas HTML necesarias
+COPY --from=builder --chown=nodejs:nodejs /app/src/api/inscription/utils/templates ./dist/src/api/inscription/utils/templates
+
 # Exponer puerto para Dokploy
 EXPOSE 3000/tcp
 
@@ -60,4 +63,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node --eval "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => { process.exit(1) })"
 
 # Comando de inicio
-CMD ["dumb-init", "node", "dist/src/server.js"] 
+CMD ["dumb-init", "node", "dist/src/server.js"]
