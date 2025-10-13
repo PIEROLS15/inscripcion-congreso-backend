@@ -63,7 +63,6 @@ RUN npm ci --only=production && npm cache clean --force
 
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nodejs:nodejs /app/src/api/inscription/utils/templates ./dist/src/api/inscription/utils/templates
-COPY --from=builder --chown=nodejs:nodejs /app/uploads/logo_congreso.png ./uploads/logo_congreso.png
 COPY --from=builder --chown=nodejs:nodejs /app/public ./public
 
 # Configuración Puppeteer
