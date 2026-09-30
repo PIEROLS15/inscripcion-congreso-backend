@@ -1,84 +1,143 @@
-import { prisma } from '../../../database/prisma'
-import { Administradores, AdminWithRole } from '../../../types/admin'
+import { randomBytes } from 'node:crypto'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import type { Administrador, Prisma, Rol } from '@prisma/client'
+import { prisma } from '../../../database/prisma'
+import { conflict, HttpError, notFound } from '../../../core/http-error'
+import type { CodigoRol } from '../../../core/catalogos'
+import { firmarSesionAdmin, SESION_SEGUNDOS, type MetodoSesion } from '../../../core/sesiones'
+import type { UserData } from '../../../middlewares/auth'
+import type { CreateAdminInput, UpdateAdminInput } from '../validation'
 
-const SECRET = process.env.JWT_SECRET || 'supersecret'
+const COSTO_BCRYPT = 12
 
-export function generateToken(admin: AdminWithRole) {
-    const expiration = Math.floor(Date.now() / 1000) + (60 * 60)
+type AdminConRol = Administrador & { rol: Rol }
 
-    return jwt.sign(
-        {
-            user: {
-                id: admin.id,
-                nombres: admin.nombres,
-                apellidos: admin.apellidos,
-                correoElectronico: admin.correoElectronico,
-                creadoEn: admin.creadoEn,
-                actualizadoEn: admin.actualizadoEn,
-                rolId: admin.rolId,
-                rolNombre: admin.rol?.nombre
-            },
-            exp: expiration,
-        },
-        SECRET
-    )
+export function aUsuarioSesion(admin: AdminConRol): UserData {
+    return {
+        id: admin.id,
+        nombres: admin.nombres,
+        apellidos: admin.apellidos,
+        correo: admin.correo,
+        rolId: admin.rolId,
+        rolCodigo: admin.rol.codigo as CodigoRol,
+        rolNombre: admin.rol.nombre,
+    }
+}
+
+export function aAdminPublico(admin: AdminConRol) {
+    return {
+        id: admin.id,
+        nombres: admin.nombres,
+        apellidos: admin.apellidos,
+        correo: admin.correo,
+        rolId: admin.rolId,
+        rolCodigo: admin.rol.codigo,
+        rolNombre: admin.rol.nombre,
+        activo: admin.activo,
+        tieneContrasena: Boolean(admin.contrasenaHash),
+        googleVinculado: Boolean(admin.googleSub),
+        googleVinculadoEn: admin.googleVinculadoEn,
+        creadoEn: admin.creadoEn,
+        actualizadoEn: admin.actualizadoEn,
+    }
+}
+
+/** JWT de sesión administrativa (audiencia `ciisic-admin`, 1 h). */
+export function generateToken(admin: AdminConRol, metodo: MetodoSesion = 'PASSWORD'): string {
+    return firmarSesionAdmin(aUsuarioSesion(admin), metodo).jwt
+}
+
+let hashFicticio: string | null = null
+
+export async function loginAdmin(correo: string, contrasena: string) {
+    const admin = await prisma.administrador.findUnique({ where: { correo }, include: { rol: true } })
+    // Se compara siempre (también sin cuenta o sin contraseña) para no revelar por tiempo de
+    // respuesta si el correo existe. El hash ficticio es de un valor aleatorio que nadie conoce.
+    hashFicticio ??= await bcrypt.hash(randomBytes(32).toString('hex'), COSTO_BCRYPT)
+    const valida = await bcrypt.compare(contrasena, admin?.contrasenaHash ?? hashFicticio)
+    // Sin contraseña el administrador entra solo con Google
+    if (!admin?.contrasenaHash || !valida || !admin.activo) throw new HttpError(401, 'INVALID_CREDENTIALS', 'Credenciales incorrectas')
+    return { jwt: generateToken(admin), usuario: aUsuarioSesion(admin), expiraEn: SESION_SEGUNDOS }
+}
+
+async function rolPorCodigo(codigo: string) {
+    const rol = await prisma.rol.findUnique({ where: { codigo } })
+    if (!rol) throw notFound('ROLE_NOT_FOUND', `El rol ${codigo} no existe.`)
+    return rol
+}
+
+async function obtener(id: number): Promise<AdminConRol> {
+    const admin = await prisma.administrador.findUnique({ where: { id }, include: { rol: true } })
+    if (!admin) throw notFound('ADMIN_NOT_FOUND', `Administrador con id ${id} no encontrado`)
+    return admin
 }
 
 export async function getAdmins() {
-    return prisma.administradores.findMany()
+    const admins = await prisma.administrador.findMany({ include: { rol: true }, orderBy: { id: 'asc' } })
+    return admins.map(aAdminPublico)
 }
 
 export async function getAdminById(id: number) {
-    return prisma.administradores.findUnique({
-        where: { id },
-    })
+    return aAdminPublico(await obtener(id))
 }
 
-export async function createAdmin(data: Administradores) {
-    const hashedPassword = await bcrypt.hash(data.contrasena, 10)
-
-    return prisma.administradores.create({
+export async function createAdmin(input: CreateAdminInput) {
+    if (await prisma.administrador.findUnique({ where: { correo: input.correo } })) throw conflict('EMAIL_IN_USE', 'Ya existe un administrador con ese correo.')
+    const rol = await rolPorCodigo(input.rolCodigo ?? 'ADMIN')
+    const admin = await prisma.administrador.create({
         data: {
-            ...data,
-            contrasena: hashedPassword,
-            rolId: 1,
-            creadoEn: new Date(),
-            actualizadoEn: new Date(),
+            nombres: input.nombres,
+            apellidos: input.apellidos,
+            correo: input.correo,
+            contrasenaHash: input.contrasena ? await bcrypt.hash(input.contrasena, COSTO_BCRYPT) : null,
+            rolId: rol.id,
+            activo: input.activo ?? true,
         },
-    })
-}
-
-export async function updateAdmin(id: number, data: Partial<Administradores>) {
-    return prisma.administradores.update({
-        where: { id },
-        data,
-    })
-}
-
-export async function deleteAdmin(id: number) {
-    return prisma.administradores.delete({
-        where: { id },
-    })
-}
-
-export async function validatePassword(plain: string, hash: string) {
-    return bcrypt.compare(plain, hash)
-}
-
-export async function loginAdmin(correoElectronico: string, contrasena: string) {
-    const admin = await prisma.administradores.findUnique({
-        where: { correoElectronico },
         include: { rol: true },
     })
+    return aAdminPublico(admin)
+}
 
-    if (!admin) throw new Error('Admin no encontrado')
+export async function updateAdmin(id: number, input: UpdateAdminInput, actorId?: number) {
+    const actual = await obtener(id)
+    if (actorId === id && (input.activo === false || (input.rolCodigo && input.rolCodigo !== 'SUPERADMIN'))) {
+        throw conflict('SELF_UPDATE_FORBIDDEN', 'No puede desactivarse ni quitarse el rol de SuperAdmin a sí mismo.')
+    }
+    const cambiaCorreo = input.correo !== undefined && input.correo !== actual.correo
+    // Quitar la propia contraseña solo si Google ya funciona para esa cuenta: si no, quedaría sin acceso
+    if (actorId === id && input.quitarContrasena && (!actual.googleSub || cambiaCorreo || input.desvincularGoogle)) {
+        throw conflict('SELF_UPDATE_FORBIDDEN', 'Para quitar tu propia contraseña, primero entra una vez con Google usando este correo.')
+    }
+    if (input.correo) {
+        const otro = await prisma.administrador.findUnique({ where: { correo: input.correo } })
+        if (otro && otro.id !== id) throw conflict('EMAIL_IN_USE', 'Ya existe un administrador con ese correo.')
+    }
+    const data: Prisma.AdministradorUncheckedUpdateInput = {}
+    if (input.nombres !== undefined) data.nombres = input.nombres
+    if (input.apellidos !== undefined) data.apellidos = input.apellidos
+    if (input.correo !== undefined) data.correo = input.correo
+    if (input.contrasena !== undefined) data.contrasenaHash = await bcrypt.hash(input.contrasena, COSTO_BCRYPT)
+    else if (input.quitarContrasena) data.contrasenaHash = null
+    if (input.rolCodigo !== undefined) data.rolId = (await rolPorCodigo(input.rolCodigo)).id
+    if (input.activo !== undefined) data.activo = input.activo
+    // Si cambia el correo o se pide explícitamente, se deshace el vínculo con la cuenta Google
+    if (cambiaCorreo || input.desvincularGoogle) {
+        data.googleSub = null
+        data.googleVinculadoEn = null
+    }
+    const admin = await prisma.administrador.update({ where: { id }, data, include: { rol: true } })
+    return aAdminPublico(admin)
+}
 
-    const isValid = await validatePassword(contrasena, admin.contrasena)
-    if (!isValid) throw new Error('Credenciales incorrectas')
-
-    const jwt = generateToken(admin)
-
-    return { jwt }
+export async function deleteAdmin(id: number, actorId?: number) {
+    if (actorId === id) throw conflict('SELF_DELETE_FORBIDDEN', 'No puede eliminarse a sí mismo.')
+    await obtener(id)
+    const revisiones = await prisma.inscripcion.count({ where: { revisadoPorId: id } })
+    if (revisiones) {
+        // Conserva el historial de revisiones: se desactiva en lugar de borrar
+        await prisma.administrador.update({ where: { id }, data: { activo: false } })
+        return { desactivado: true }
+    }
+    await prisma.administrador.delete({ where: { id } })
+    return { desactivado: false }
 }

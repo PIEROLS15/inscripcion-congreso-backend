@@ -1,80 +1,54 @@
 import { Request, Response } from 'express'
-import { getRegistrationTypes, getRegistrationTypeById, createRegistrationType, updateRegistrationType, deleteRegistrationType } from '../services/registration-type'
+import { idParam } from '../../../core/http-error'
+import { obtenerEventoPrincipal } from '../../event/services/public-event'
+import * as service from '../services/registration-type'
+import { eventoDelSitio } from '../../../middlewares/sitio'
 
-export async function list(req: Request, res: Response) {
-    try {
-        const data = await getRegistrationTypes()
-        return res.status(200).json(data)
-    } catch (error) {
-        return res.status(500).json({
-            error: 'Error inesperado',
-            details: (error as Error).message,
-        })
-    }
+// Público
+export async function publicList(req: Request, res: Response) {
+    const evento = eventoDelSitio(req)
+    const categoria = typeof req.query.categoria === 'string' ? req.query.categoria : undefined
+    res.json({ success: true, data: await service.tiposPublicos(evento.id, categoria) })
 }
 
-export async function create(req: Request, res: Response) {
-    try {
-        const data = req.body
-        const registrationType = await createRegistrationType(data)
-        return res.status(201).json(registrationType)
-    } catch (error) {
-        return res.status(400).json({
-            error: 'Error en la creación del tipo de inscripción',
-            details: (error as Error).message,
-        })
-    }
+// Legacy (evento principal, forma de respuesta anterior)
+export async function legacyList(_req: Request, res: Response) {
+    const evento = await obtenerEventoPrincipal()
+    res.json(await service.tiposLegacy(evento.id))
 }
 
-export async function find(req: Request, res: Response) {
-    try {
-        const id = parseInt(req.params.id, 10)
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'El id debe ser un número válido' })
-        }
-        const registrationType = await getRegistrationTypeById(id)
-        if (!registrationType) {
-            return res.status(404).json({ error: `Tipo de inscripción con id ${id} no encontrado` })
-        }
-        return res.json(registrationType)
-    } catch (error) {
-        return res.status(500).json({
-            error: 'Error al obtener el tipo de inscripción',
-            details: (error as Error).message,
-        })
-    }
+export async function legacyFind(req: Request, res: Response) {
+    const evento = await obtenerEventoPrincipal()
+    res.json(await service.tipoLegacy(evento.id, idParam(req.params.id)))
 }
 
-export async function update(req: Request, res: Response) {
-    try {
-        const id = parseInt(req.params.id, 10)
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'El id debe ser un número válido' })
-        }
-        const data = req.body
-        const updatedRegistrationType = await updateRegistrationType(id, data)
-        return res.json(updatedRegistrationType)
-    } catch (error) {
-        return res.status(400).json({
-            error: 'Error en la actualización del tipo de inscripción',
-            details: (error as Error).message,
-        })
-    }
+// Administración
+export async function listCategories(req: Request, res: Response) {
+    res.json({ success: true, data: await service.categoriasDeEvento(idParam(req.params.eventId, 'eventId')) })
 }
 
-export async function remove(req: Request, res: Response) {
-    try {
-        const id = parseInt(req.params.id, 10)
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'El id debe ser un número válido' })
-        }
-        await deleteRegistrationType(id)
-        return res.status(200).json({ message: 'Tipo de inscripción eliminado correctamente' })
-    } catch (error) {
-        return res.status(500).json({
-            error: 'Error al eliminar el tipo de inscripción',
-            details: (error as Error).message,
-        })
-    }
+export async function createCategory(req: Request, res: Response) {
+    res.status(201).json({ success: true, data: await service.crearCategoria(idParam(req.params.eventId, 'eventId'), req.body) })
 }
 
+export async function updateCategory(req: Request, res: Response) {
+    res.json({ success: true, data: await service.actualizarCategoria(idParam(req.params.id), req.body) })
+}
+
+export async function removeCategory(req: Request, res: Response) {
+    await service.eliminarCategoria(idParam(req.params.id))
+    res.json({ success: true, data: null })
+}
+
+export async function createType(req: Request, res: Response) {
+    res.status(201).json({ success: true, data: await service.crearTipo(idParam(req.params.id), req.body) })
+}
+
+export async function updateType(req: Request, res: Response) {
+    res.json({ success: true, data: await service.actualizarTipo(idParam(req.params.id), req.body) })
+}
+
+export async function removeType(req: Request, res: Response) {
+    await service.eliminarTipo(idParam(req.params.id))
+    res.json({ success: true, data: null })
+}

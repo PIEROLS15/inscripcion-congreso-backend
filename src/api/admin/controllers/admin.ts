@@ -1,106 +1,39 @@
 import { Request, Response } from 'express'
+import { idParam } from '../../../core/http-error'
+import type { AuthenticatedRequest } from '../../../middlewares/auth'
+import { createAdmin, deleteAdmin, getAdminById, getAdmins, loginAdmin, updateAdmin } from '../services/admin'
 
-import {
-    getAdmins,
-    getAdminById,
-    createAdmin,
-    updateAdmin,
-    deleteAdmin,
-    loginAdmin
-} from '../services/admin'
-
-export async function list(req: Request, res: Response) {
-    try {
-        const data = await getAdmins()
-        return res.status(200).json(data)
-    } catch (error) {
-        return res.status(500).json({
-            error: 'Error inesperado',
-            details: (error as Error).message,
-        })
-    }
+export async function list(_req: Request, res: Response) {
+    res.json({ success: true, data: await getAdmins() })
 }
 
 export async function create(req: Request, res: Response) {
-    try {
-        const data = req.body
-        const classification = await createAdmin(data)
-        return res.status(201).json(classification)
-    } catch (error) {
-        return res.status(400).json({
-            error: 'Error en la creación de la clasificación',
-            details: (error as Error).message,
-        })
-    }
+    res.status(201).json({ success: true, data: await createAdmin(req.body) })
 }
 
 export async function find(req: Request, res: Response) {
-    try {
-        const id = parseInt(req.params.id, 10)
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'El id debe ser un número válido' })
-        }
-        const classification = await getAdminById(id)
-        if (!classification) {
-            return res.status(404).json({ error: `Admin con id ${id} no encontrado` })
-        }
-        return res.json(classification)
-    } catch (error) {
-        return res.status(500).json({
-            error: 'Error al obtener el admin',
-            details: (error as Error).message,
-        })
-    }
+    res.json({ success: true, data: await getAdminById(idParam(req.params.id)) })
 }
 
-export async function update(req: Request, res: Response) {
-    try {
-        const id = parseInt(req.params.id, 10)
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'El id debe ser un número válido' })
-        }
-        const data = req.body
-        const classification = await updateAdmin(id, data)
-        return res.status(200).json(classification)
-    } catch (error) {
-        return res.status(400).json({
-            error: 'Error en la actualización del admin',
-            details: (error as Error).message,
-        })
-    }
+export async function update(req: AuthenticatedRequest, res: Response) {
+    res.json({ success: true, data: await updateAdmin(idParam(req.params.id), req.body, req.user?.id) })
 }
 
-export async function remove(req: Request, res: Response) {
-    try {
-        const id = parseInt(req.params.id, 10)
-        if (isNaN(id)) {
-            return res.status(400).json({ error: 'El id debe ser un número válido' })
-        }
-        await deleteAdmin(id)
-        return res.status(200).json({ message: 'Admin eliminado correctamente' })
-    } catch (error) {
-        return res.status(500).json({
-            error: 'Error al eliminar el admin',
-            details: (error as Error).message,
-        })
-    }
+export async function remove(req: AuthenticatedRequest, res: Response) {
+    res.json({ success: true, data: await deleteAdmin(idParam(req.params.id), req.user?.id) })
 }
 
 export async function login(req: Request, res: Response) {
-    try {
-        const { correoElectronico, contrasena } = req.body
+    const correo = req.body.correo || req.body.correoElectronico
+    const { jwt, usuario, expiraEn } = await loginAdmin(correo, req.body.contrasena)
+    res.json({ jwt, usuario, expiraEn, tipo: 'ADMIN' })
+}
 
-        if (!correoElectronico || !contrasena) {
-            return res.status(400).json({ error: 'Email y contraseña son requeridos' })
-        }
-
-        const { jwt } = await loginAdmin(correoElectronico, contrasena)
-
-        return res.status(200).json({ jwt })
-    } catch (error) {
-        return res.status(401).json({
-            error: 'Error en el login',
-            details: (error as Error).message,
-        })
+/** Sesión actual: administrador (`user`, forma anterior) o participante del portal. */
+export function session(req: AuthenticatedRequest, res: Response) {
+    if (req.participante) {
+        res.json({ success: true, tipo: 'PARTICIPANTE', participante: req.participante })
+        return
     }
+    res.json({ success: true, tipo: 'ADMIN', user: req.user })
 }
